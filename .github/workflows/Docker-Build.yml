@@ -13,6 +13,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Debug workflow_run event
+        run: |
+          echo "Workflow name: ${{ github.event.workflow_run.name }}"
+          echo "Branch: ${{ github.event.workflow_run.head_branch }}"
+          echo "Event name: ${{ github.event_name }}"
+          
       - name: Download JAR artifact
         uses: actions/download-artifact@v3
         with:
