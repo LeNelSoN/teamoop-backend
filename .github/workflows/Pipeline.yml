@@ -72,29 +72,29 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build --build-arg JAR_FILE=teamoop-0.0.1-SNAPSHOT.jar -t ghcr.io/edj/teamoop-backend:${{ env.IMAGE_TAG }} .
-          docker tag ghcr.io/edj/teamoop-backend:${{ env.IMAGE_TAG }} ghcr.io/edj/teamoop-backend:latest
+          docker build --build-arg JAR_FILE=teamoop-0.0.1-SNAPSHOT.jar -t ghcr.io/${{ github.repository_owner }}/teamoop-backend:${{ env.IMAGE_TAG }} .
+          docker tag ghcr.io/${{ github.repository_owner }}/teamoop-backend:${{ env.IMAGE_TAG }} ghcr.io/${{ github.repository_owner }}/teamoop-backend:latest
 
       - name: Verify Docker Image
         run: |
-          if ! docker image inspect ghcr.io/edj/teamoop-backend:${{ env.IMAGE_TAG }} > /dev/null 2>&1; then
+          if ! docker image inspect ghcr.io/${{ github.repository_owner }}/teamoop-backend:${{ env.IMAGE_TAG }} > /dev/null 2>&1; then
             echo "Error: Docker image not built!"
             exit 1
           fi
 
       - name: Test Docker Image
         run: |
-          docker run --rm -d --name test-container ghcr.io/edj/teamoop-backend:${{ env.IMAGE_TAG }}
+          docker run --rm -d --name test-container ghcr.io/${{ github.repository_owner }}/teamoop-backend:${{ env.IMAGE_TAG }}
           sleep 5
           docker logs test-container
           docker stop test-container
 
       - name: Push Docker Image
         run: |
-          docker push ghcr.io/edj/teamoop-backend:${{ env.IMAGE_TAG }}
-          docker push ghcr.io/edj/teamoop-backend:latest
+          docker push ghcr.io/${{ github.repository_owner }}/teamoop-backend:${{ env.IMAGE_TAG }}
+          docker push ghcr.io/${{ github.repository_owner }}/teamoop-backend:latest
 
       - name: Clean up local Docker images
         run: |
-          docker rmi ghcr.io/edj/teamoop-backend:${{ env.IMAGE_TAG }} || true
-          docker rmi ghcr.io/edj/teamoop-backend:latest || true
+          docker rmi ghcr.io/${{ github.repository_owner }}/teamoop-backend:${{ env.IMAGE_TAG }} || true
+          docker rmi ghcr.io/${{ github.repository_owner }}/teamoop-backend:latest || true
