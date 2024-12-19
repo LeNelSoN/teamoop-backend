@@ -34,6 +34,7 @@ jobs:
         run: mvn clean install --batch-mode --no-transfer-progress
 
       - name: Upload JAR as artifact
+        if: github.event_name == 'pull_request' && github.base_ref == 'dev'
         uses: actions/upload-artifact@v3
         with:
           name: teamoop-backend-jar
