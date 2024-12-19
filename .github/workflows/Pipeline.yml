@@ -23,7 +23,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build and Test
-        run: mvn clean install --batch-mode --no-transfer-progress
+        run: mvn clean package install --batch-mode --no-transfer-progress
 
       - name: Verify JAR exists
         run: |
@@ -36,7 +36,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: teamoop-backend-jar
-          path: target/*.jar
+          path: target/*SNAPSHOT.jar
+
 
   docker-build-and-push:
     needs: build-and-test
