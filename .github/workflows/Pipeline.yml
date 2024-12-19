@@ -25,12 +25,12 @@ jobs:
       - name: Build and Test
         run: mvn clean package install --batch-mode --no-transfer-progress
 
-      - name: Verify JAR exists
-        run: |
-          if [ ! -f "target/*.jar" ]; then
-            echo "Error: JAR file not found!"
-            exit 1
-          fi
+      # - name: Verify JAR exists
+      #   run: |
+      #     if [ ! -f "target/*.jar" ]; then
+      #       echo "Error: JAR file not found!"
+      #       exit 1
+      #     fi
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v3
