@@ -75,7 +75,7 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build --build-arg JAR_FILE=teamoop-0.0.1-SNAPSHOT.jar -t ghcr.io/${{ env.OWNER }}/teamoop-backend:${{ env.IMAGE_TAG }} .
-          docker tag ghcr.io/${{ env.OWNER }}/teamoop-backend:${{ env.IMAGE_TAG }} ghcr.io/${{ github.repository_owner }}/teamoop-backend:latest
+          docker tag ghcr.io/${{ env.OWNER }}/teamoop-backend:${{ env.IMAGE_TAG }} ghcr.io/${{ env.OWNER }}/teamoop-backend:latest
 
       - name: Verify Docker Image
         run: |
