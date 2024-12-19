@@ -56,6 +56,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: List files in root directory
+        run: ls -l
 
       - name: Define tags
         id: vars
