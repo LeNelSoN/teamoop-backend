@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -30,27 +30,23 @@ jobs:
       - name: Build and Test with Coverage
         run: mvn clean verify jacoco:report --batch-mode --no-transfer-progress
 
-      - name: Upload JaCoCo Report
-        uses: actions/upload-artifact@v3
-        with:
-          name: jacoco-html-report
-          path: target/site/jacoco
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
 
-      - name: Post JaCoCo Coverage in PR
-        if: github.event_name == 'pull_request'
+      - name: Extract JaCoCo Coverage
+        id: coverage
         run: |
-          COVERED_LINES=$(grep -oP '(?<=<counter type="LINE" missed=")[^"]*' target/site/jacoco/jacoco.xml | awk '{missed += $1} END {print missed}')
-          TOTAL_LINES=$(grep -oP '(?<=<counter type="LINE" covered=")[^"]*' target/site/jacoco/jacoco.xml | awk '{covered += $1} END {print covered}')
-          PERCENT_COVERAGE=$((COVERED_LINES * 100 / (COVERED_LINES + TOTAL_LINES)))
-          PERCENT_COVERAGE=$((COVERAGE * 100 / TOTAL_LINES))
+          COVERED=$(xmllint --xpath "string(//counter[@type='LINE']/@covered)" target/site/jacoco/jacoco.xml)
+          MISSED=$(xmllint --xpath "string(//counter[@type='LINE']/@missed)" target/site/jacoco/jacoco.xml)
+          TOTAL=$((COVERED + MISSED))
+          PERCENT=$((COVERED * 100 / TOTAL))
+          echo "Coverage: $PERCENT%"
+          echo "coverage=$PERCENT" >> $GITHUB_ENV
 
-          echo "**Nombre de lignes couvertes:** $COVERAGE/$TOTAL_LINES ($PERCENT_COVERAGE%)" >> coverage-summary.md
-
-          curl -s -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            -d @- \
-            https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments <<EOF
-          {
-            "body": "$(cat coverage-summary.md)"
-          }
+      - name: Post Coverage Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: Code Coverage
+          message: |
+            ### Code Coverage Report
+            - Coverage: **${{ env.coverage }}%**
