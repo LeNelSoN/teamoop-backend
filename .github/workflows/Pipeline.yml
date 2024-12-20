@@ -47,12 +47,15 @@ jobs:
       - name: Extract JaCoCo Coverage
         id: coverage
         run: |
-          COVERED=$(xmllint --xpath "string(//counter[@type='LINE']/@covered)" target/site/jacoco/jacoco.xml)
-          MISSED=$(xmllint --xpath "string(//counter[@type='LINE']/@missed)" target/site/jacoco/jacoco.xml)
-          TOTAL=$((COVERED + MISSED))
-          PERCENT=$((COVERED * 100 / TOTAL))
-          echo "Coverage: $PERCENT%"
-          echo "coverage=$PERCENT" >> $GITHUB_ENV
+          COVERED_LINES=$(xmllint --xpath "string(//counter[@type='LINE']/@covered)" target/site/jacoco/jacoco.xml)
+          MISSED_LINES=$(xmllint --xpath "string(//counter[@type='LINE']/@missed)" target/site/jacoco/jacoco.xml)
+          
+          TOTAL_LINES=$((COVERED_LINES + MISSED_LINES))
+          COVERAGE_PERCENT=$((COVERED_LINES * 100 / TOTAL_LINES))
+          
+          echo "Code Coverage: $COVERAGE_PERCENT%"
+          
+          echo "COVERAGE_PERCENT=$COVERAGE_PERCENT" >> $GITHUB_ENV
 
       - name: Post Coverage Comment
         uses: marocchino/sticky-pull-request-comment@v2
@@ -60,7 +63,7 @@ jobs:
           header: Code Coverage
           message: |
             ### Code Coverage Report
-            - Coverage: **${{ env.coverage }}%**
+            - Coverage: **${{ env.COVERAGE_PERCENT }}%**
 
       - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v3
