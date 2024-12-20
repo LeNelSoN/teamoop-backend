@@ -50,3 +50,9 @@ jobs:
           message: |
             ### Code Coverage Report
             - Coverage: **${{ env.coverage }}%**
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-html-report
+          path: target/site/jacoco
