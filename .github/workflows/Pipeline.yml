@@ -23,15 +23,50 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2
 
-      - name: Build and Test
-        run: mvn clean package install --batch-mode --no-transfer-progress
+      - name: Build and Test with Coverage
+        run: mvn clean verify jacoco:report --batch-mode --no-transfer-progress
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v3
         with:
           name: teamoop-backend-jar
           path: target/*SNAPSHOT.jar
+
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
+
+      - name: Extract JaCoCo Coverage
+        id: coverage
+        run: |
+          COVERED=$(xmllint --xpath "string(//counter[@type='LINE']/@covered)" target/site/jacoco/jacoco.xml)
+          MISSED=$(xmllint --xpath "string(//counter[@type='LINE']/@missed)" target/site/jacoco/jacoco.xml)
+          TOTAL=$((COVERED + MISSED))
+          PERCENT=$((COVERED * 100 / TOTAL))
+          echo "Coverage: $PERCENT%"
+          echo "coverage=$PERCENT" >> $GITHUB_ENV
+
+      - name: Post Coverage Comment
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: Code Coverage
+          message: |
+            ### Code Coverage Report
+            - Coverage: **${{ env.coverage }}%**
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-html-report
+          path: target/site/jacoco
 
   docker-build-and-push:
     needs: build-and-test
