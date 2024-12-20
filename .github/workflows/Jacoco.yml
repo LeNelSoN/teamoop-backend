@@ -39,9 +39,9 @@ jobs:
       - name: Post JaCoCo Coverage in PR
         if: github.event_name == 'pull_request'
         run: |
-          COVERAGE=$(xmllint --xpath "string(//report/counter[@type='LINE']/@covered)" target/site/jacoco/jacoco.xml)
-          TOTAL=$(xmllint --xpath "string(//report/counter[@type='LINE']/@missed)" target/site/jacoco/jacoco.xml)
-          TOTAL_LINES=$((COVERAGE + TOTAL))
+          COVERED_LINES=$(grep -oP '(?<=<counter type="LINE" missed=")[^"]*' target/site/jacoco/jacoco.xml | awk '{missed += $1} END {print missed}')
+          TOTAL_LINES=$(grep -oP '(?<=<counter type="LINE" covered=")[^"]*' target/site/jacoco/jacoco.xml | awk '{covered += $1} END {print covered}')
+          PERCENT_COVERAGE=$((COVERED_LINES * 100 / (COVERED_LINES + TOTAL_LINES)))
           PERCENT_COVERAGE=$((COVERAGE * 100 / TOTAL_LINES))
           
           echo "### JaCoCo Coverage Pour les devs qui en veulent" > coverage-summary.md
