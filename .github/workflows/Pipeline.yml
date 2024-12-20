@@ -23,15 +23,38 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2
 
-      - name: Build and Test
-        run: mvn clean package install --batch-mode --no-transfer-progress
+      - name: Build and Test with Coverage
+        run: mvn clean verify jacoco:report --batch-mode --no-transfer-progress
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v3
         with:
           name: teamoop-backend-jar
           path: target/*SNAPSHOT.jar
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-html-report
+          path: target/site/jacoco
+
+      - name: Post Comment with Report Link
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: Code Coverage
+          message: |
+            ### Code Coverage Report
+            - A full JaCoCo report is available in the artifacts of this workflow.
+            - You can download it [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
 
   docker-build-and-push:
     needs: build-and-test
