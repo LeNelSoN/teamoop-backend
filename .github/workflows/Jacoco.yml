@@ -43,11 +43,8 @@ jobs:
           TOTAL_LINES=$(grep -oP '(?<=<counter type="LINE" covered=")[^"]*' target/site/jacoco/jacoco.xml | awk '{covered += $1} END {print covered}')
           PERCENT_COVERAGE=$((COVERED_LINES * 100 / (COVERED_LINES + TOTAL_LINES)))
           PERCENT_COVERAGE=$((COVERAGE * 100 / TOTAL_LINES))
-          
-          echo "### JaCoCo Coverage Pour les devs qui en veulent" > coverage-summary.md
+
           echo "**Nombre de lignes couvertes:** $COVERAGE/$TOTAL_LINES ($PERCENT_COVERAGE%)" >> coverage-summary.md
-          echo "" >> coverage-summary.md
-          echo "Le rapport détaillé est disponible sur la pull request" >> coverage-summary.md
 
           curl -s -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
