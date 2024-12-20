@@ -41,35 +41,20 @@ jobs:
           name: teamoop-backend-jar
           path: target/*SNAPSHOT.jar
 
-      - name: Install xmllint
-        run: sudo apt-get update && sudo apt-get install -y libxml2-utils
-
-      - name: Extract JaCoCo Coverage
-        id: coverage
-        run: |
-          COVERED_LINES=$(xmllint --xpath "string(//counter[@type='LINE']/@covered)" target/site/jacoco/jacoco.xml)
-          MISSED_LINES=$(xmllint --xpath "string(//counter[@type='LINE']/@missed)" target/site/jacoco/jacoco.xml)
-          
-          TOTAL_LINES=$((COVERED_LINES + MISSED_LINES))
-          COVERAGE_PERCENT=$((COVERED_LINES * 100 / TOTAL_LINES))
-          
-          echo "Code Coverage: $COVERAGE_PERCENT%"
-          
-          echo "COVERAGE_PERCENT=$COVERAGE_PERCENT" >> $GITHUB_ENV
-
-      - name: Post Coverage Comment
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: Code Coverage
-          message: |
-            ### Code Coverage Report
-            - Coverage: **${{ env.COVERAGE_PERCENT }}%**
-
       - name: Upload JaCoCo Report
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-html-report
           path: target/site/jacoco
+
+      - name: Post Comment with Report Link
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: Code Coverage
+          message: |
+            ### Code Coverage Report
+            - A full JaCoCo report is available in the artifacts of this workflow.
+            - You can download it [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
 
   docker-build-and-push:
     needs: build-and-test
