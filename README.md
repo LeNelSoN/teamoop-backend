@@ -63,6 +63,21 @@ http://localhost:8080/api/hello
 
 ---
 
+## Swagger UI
+
+- **Swagger UI** est disponible à l'adresse suivante : 
+  - http://localhost:8080/swagger-ui/index.html
+- Assurez-vous que l'application **Spring Boot** est en cours d'exécution.
+- Endpoint des spécifications **OpenAPI** : 
+  - http://localhost:8080/v3/api-docs
+
+### Si l'interface rencontre un problème
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+
+---
 ## Déploiement avec CI/CD
    - L'application est configurée pour utiliser **GitHub Actions** pour les étapes suivantes :
      - **Build** et **tests** Maven.
