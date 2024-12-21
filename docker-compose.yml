@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:17.2
+    container_name: postgres-db
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: teamoopDB
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: mdp
+
+volumes:
+  postgres-data:
+    driver: local

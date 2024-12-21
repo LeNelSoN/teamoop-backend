@@ -9,5 +9,4 @@ public class TeamoopApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TeamoopApplication.class, args);
 	}
-
 }
