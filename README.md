@@ -73,7 +73,7 @@ http://localhost:8080/api/hello
 
 ### Si l'interface rencontre un problème
 ```bash
-mvn clean instal
+mvn clean install
 mvn spring-boot:run
 ```
 
