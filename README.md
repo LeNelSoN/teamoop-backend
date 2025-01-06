@@ -63,6 +63,26 @@ http://localhost:8080/api/hello
 
 ---
 
+## Redis
+Avant de démarrer l'application Spring Boot, il est nécessaire de faire tourner Redis dans un conteneur Docker.
+
+### 1. Lancer Redis avec Docker Compose
+Dans le répertoire du projet, exécutez la commande suivante pour démarrer Redis :
+
+```bash
+docker-compose up
+```
+Cela démarrera Redis dans un conteneur, accessible à l'adresse http://localhost:6379.
+
+### 2. Lancer l'application Spring Boot
+Une fois Redis lancé, vous pouvez démarrer l'application Spring Boot comme d'habitude :
+
+```bash
+mvn spring-boot:run
+```
+
+---
+
 ## Swagger UI
 
 - **Swagger UI** est disponible à l'adresse suivante : 
