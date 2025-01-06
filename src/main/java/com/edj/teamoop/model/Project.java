@@ -2,13 +2,14 @@ package com.edj.teamoop.model;
 
 
 import jakarta.persistence.*;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "projects")
 public class Project {
 
@@ -33,9 +34,9 @@ public class Project {
     public Project(String name, String description,  LocalDate startDate,  LocalDate endDate, boolean active) {
         this.name = name;
         this.description = description;
-        this.startDate = LocalDate.now();
-        this.endDate = LocalDate.now();
-        this.active = true;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.active = active;
     }
 
     public Project(String name, String description) {
