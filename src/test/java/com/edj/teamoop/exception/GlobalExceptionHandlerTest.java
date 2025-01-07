@@ -44,7 +44,7 @@ public class GlobalExceptionHandlerTest {
     }
 
     @Test
-    void shouldHandleProjectNotFoundException() {
+    void testHandleProjectNotFoundException() {
         GlobalExceptionHandler exceptionHandler = new GlobalExceptionHandler();
         ProjectNotFoundException exception = new ProjectNotFoundException("The project with ID 123 does not exist");
         MockHttpServletRequest request = new MockHttpServletRequest();
