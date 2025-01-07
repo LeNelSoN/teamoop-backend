@@ -29,16 +29,4 @@ public class Project {
 
     @Column(nullable = false)
     private Boolean active;
-
-    public Project(String name, String description,  LocalDate startDate,  LocalDate endDate, boolean active) {
-        this.name = name;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.active = active;
-    }
-
-    public Project(String name, String description) {
-        this(name, description, LocalDate.now(), LocalDate.now(), true);
-    }
 }

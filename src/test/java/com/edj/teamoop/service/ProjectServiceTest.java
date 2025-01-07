@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,27 +26,39 @@ class ProjectServiceTest {
     @Autowired
     private ProjectService projectService;
 
+    static final String PROJECT_NAME = "Project 2";
     @BeforeAll
     void populateProjects() {
-        projectService.createProject("Project 1", "Description 1");
-        projectService.createProject("Project 2", "Description 2");
+        Project p1 = new Project();
+        p1.setName("Project 1");
+        p1.setDescription("Description 1");
+        p1.setActive(false);
+        p1.setStartDate(LocalDate.now());
+        p1.setEndDate(LocalDate.now());
+        projectRepository.save(p1);
+
+        Project p2 = new Project();
+        p2.setName(PROJECT_NAME);
+        p2.setDescription("Description 2");
+        p2.setActive(true);
+        p2.setStartDate(LocalDate.now());
+        p2.setEndDate(LocalDate.now());
+        projectRepository.save(p2);
     }
 
     @Test
     void testGetAllProjects() {
         List<Project> result = projectService.getAllProjects();
-        // Assert
         assertEquals(2, result.size());
     }
 
-
     @Test
     void testGetProjectByName() {
-        String projectName = "Project 2";
-
-        Optional<Project> result = projectService.getProjectByName(projectName);
-
-        assertTrue(result.isPresent());
-        assertEquals(projectName, result.get().getName());
+        try {
+            Project result = projectService.getProjectByName(PROJECT_NAME);
+            assertEquals(PROJECT_NAME, result.getName());
+        } catch (Exception e) {
+            fail("Le project est introuvable");
+        }
     }
 }

@@ -18,26 +18,30 @@ public class ProjectService {
         return projectRepository.findAll();
     }
 
-    public Optional<Project> getProjectById(Long id) {
-        return projectRepository.findById(id);
-    }
-
-    public Project createProject(String name, String description)
-    {
-        Project p = new Project(name, description);
-        return projectRepository.save(p);
+    public Project getProjectById(Long id) {
+        Optional<Project> project = projectRepository.findById(id);
+        if(project.isPresent()) {
+            return project.get();
+        } else {
+            throw new IllegalArgumentException("Le projet avec  l'id " + id + " n'existe pas.");
+        }
     }
 
     public void deleteProjectById(Long id) {
         if(projectRepository.existsById(id)) {
             projectRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Le projet avec l'id " + id + " n'existe pas.");
+            throw new IllegalArgumentException("Le projet avec  l'id " + id + " n'existe pas.");
         }
     }
 
-    public Optional<Project> getProjectByName(String name) {
-        return projectRepository.findByName(name);
+    public Project getProjectByName(String name) {
+        Optional<Project> project = projectRepository.findByName(name);
+        if(project.isPresent()) {
+            return project.get();
+        } else {
+            throw new IllegalArgumentException("Le projet avec  le nom " + name + " n'existe pas.");
+        }
     }
 
     public List<Project> getActiveProjects() {
