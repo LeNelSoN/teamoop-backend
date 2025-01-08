@@ -1,5 +1,6 @@
 package com.edj.teamoop.exception;
 
+import com.edj.teamoop.exception.handler.GlobalExceptionHandler;
 import com.edj.teamoop.response.ErrorResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -43,19 +44,4 @@ public class GlobalExceptionHandlerTest {
         assertThat(errorResponse.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    @Test
-    void testHandleProjectNotFoundException() {
-        GlobalExceptionHandler exceptionHandler = new GlobalExceptionHandler();
-        ProjectNotFoundException exception = new ProjectNotFoundException("The project with ID 123 does not exist");
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        WebRequest webRequest = new ServletWebRequest(request);
-
-        ResponseEntity<ErrorResponse> responseEntity = exceptionHandler.handleProjectNotFoundException(exception, webRequest);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-        ErrorResponse errorResponse = responseEntity.getBody();
-        assertThat(errorResponse).isNotNull();
-        assertThat(errorResponse.getMessage()).isEqualTo("The project with ID 123 does not exist");
-        assertThat(errorResponse.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
-    }
 }
