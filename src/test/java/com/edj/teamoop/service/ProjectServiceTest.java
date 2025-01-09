@@ -41,7 +41,6 @@ public class ProjectServiceTest {
 
         when(projectRepository.findAll(PageRequest.of(0, 10))).thenReturn(projectPage);
 
-        // Simule le comportement du mapper
         when(projectMapper.toDTO(any(Project.class))).thenAnswer(invocation -> {
             Project project = invocation.getArgument(0);
             return new ProjectDTO(
