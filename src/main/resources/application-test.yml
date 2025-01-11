@@ -4,7 +4,6 @@ spring:
     driverClassName: org.h2.Driver
     username: username
     password: password
-    type: simple
   cache:
     type: simple
   h2:
