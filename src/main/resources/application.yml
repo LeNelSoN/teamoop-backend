@@ -32,8 +32,7 @@ logging:
       springframework:
         security: DEBUG
         data:
-          redis=DEBUG:
+          redis: DEBUG
         web:
           cors: DEBUG
-
       springdoc: DEBUG
