@@ -1,5 +1,6 @@
 package com.edj.teamoop.exception.handler;
 
+import com.edj.teamoop.exception.DataNotFoundException;
 import com.edj.teamoop.exception.ProjectNotFoundException;
 import com.edj.teamoop.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
