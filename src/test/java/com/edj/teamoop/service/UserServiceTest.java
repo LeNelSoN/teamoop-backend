@@ -1,6 +1,8 @@
 package com.edj.teamoop.service;
 
 import com.edj.teamoop.dto.UserDTO;
+import com.edj.teamoop.exception.EmailAlreadyExistsException;
+import com.edj.teamoop.exception.InvalidPasswordException;
 import com.edj.teamoop.model.User;
 import com.edj.teamoop.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,20 +35,15 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCreateUser() {
+    void testCreateUser_OK() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("Test");
         userDTO.setEmail("test@gmail.com");
-        userDTO.setPassword("test123");
+        userDTO.setPassword("Test123!45678");
 
-        when(passwordEncoder.encode(userDTO.getPassword())).thenReturn("hashedPassword123");
-
-        User savedUser = new User();
-        savedUser.setName(userDTO.getName());
-        savedUser.setEmail(userDTO.getEmail());
-        savedUser.setPassword("hashedPassword123");
-
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(false);
+        when(passwordEncoder.encode(userDTO.getPassword())).thenReturn("HashedPassword123!");
+        when(userRepository.save(any(User.class))).thenReturn(new User());
 
         userService.createUser(userDTO);
 
@@ -56,26 +53,55 @@ public class UserServiceTest {
         User capturedUser = userCaptor.getValue();
         assertEquals("Test", capturedUser.getName());
         assertEquals("test@gmail.com", capturedUser.getEmail());
-        assertEquals("hashedPassword123", capturedUser.getPassword());
+        assertEquals("HashedPassword123!", capturedUser.getPassword());
 
-        verify(passwordEncoder).encode(userDTO.getPassword());
+        verify(passwordEncoder, times(1)).encode(userDTO.getPassword());
     }
 
     @Test
-    void testCreateUser_EmailAlreadyExists() {
-        
+    void testCreateUser_EmailAlreadyExists_OK() {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName("Test");
+        userDTO.setEmail("test@gmail.com");
+        userDTO.setPassword("Test123!45678");
+
+        when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(true);
+
+        Exception exception = assertThrows(EmailAlreadyExistsException.class, () -> {
+            userService.createUser(userDTO);
+        });
+
+        assertEquals("L'email test@gmail.com est déjà utilisé.", exception.getMessage());
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void testCreateUser_InvalidPassword_OK() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("Test");
         userDTO.setEmail("test@gmail.com");
         userDTO.setPassword("test123");
 
-        when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(true);
+        Exception exception = assertThrows(InvalidPasswordException.class, () -> {
+            userService.createUser(userDTO);
+        });
+
+        assertEquals("Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.", exception.getMessage());
+
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void testCreateUser_MissingFields_OK() {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName("Test");
+        userDTO.setEmail(null); 
+        userDTO.setPassword("Test123!45678");
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             userService.createUser(userDTO);
         });
 
-        assertEquals("L'adresse mail est déja utilisé !", exception.getMessage());
-        verify(userRepository, never()).save(any(User.class));
+        assertEquals("Les champs nom, email et mot de passe sont obligatoires.", exception.getMessage());
     }
 }

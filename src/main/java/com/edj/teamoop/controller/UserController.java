@@ -15,6 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 
 @RestController
@@ -25,9 +26,8 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public void addUser(@RequestBody UserDTO userDTO) {
-        
+    public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
         this.userService.createUser(userDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Utilisateur créé avec succès.");
     }
 }
