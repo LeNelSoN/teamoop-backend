@@ -1,5 +1,6 @@
 package com.edj.teamoop.service;
 
+import com.edj.teamoop.exception.ProjectNotFoundException;
 import com.edj.teamoop.dto.ProjectDTO;
 import com.edj.teamoop.mapper.ProjectMapper;
 import com.edj.teamoop.model.Project;
@@ -33,28 +34,20 @@ public class ProjectService {
 
     public Project getProjectById(Long id) {
         Optional<Project> project = projectRepository.findById(id);
-        if(project.isPresent()) {
-            return project.get();
-        } else {
-            throw new IllegalArgumentException("Le projet avec  l'id " + id + " n'existe pas.");
-        }
+        return project.orElseThrow(()-> new ProjectNotFoundException(String.format("The project with ID %s does not exist.", id)));
     }
 
     public void deleteProjectById(Long id) {
         if(projectRepository.existsById(id)) {
             projectRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Le projet avec  l'id " + id + " n'existe pas.");
+            throw new ProjectNotFoundException(String.format("The project with ID %s does not exist.", id));
         }
     }
 
     public Project getProjectByName(String name) {
         Optional<Project> project = projectRepository.findByName(name);
-        if(project.isPresent()) {
-            return project.get();
-        } else {
-            throw new IllegalArgumentException("Le projet avec  le nom " + name + " n'existe pas.");
-        }
+        return project.orElseThrow(()-> new ProjectNotFoundException(String.format("The project with ID %s does not exist.", name)));
     }
 
     public List<Project> getActiveProjects() {

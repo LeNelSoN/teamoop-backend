@@ -1,5 +1,7 @@
-package com.edj.teamoop.exception;
+package com.edj.teamoop.exception.handler;
 
+import com.edj.teamoop.exception.DataNotFoundException;
+import com.edj.teamoop.exception.ProjectNotFoundException;
 import com.edj.teamoop.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +32,15 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // Gestion des exceptions spécifiques (exemple : IllegalArgumentException)
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse(
-                ex.getMessage(),
+                "Internal Error",
                 request.getDescription(false),
                 HttpStatus.BAD_REQUEST.value()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
 }
 
