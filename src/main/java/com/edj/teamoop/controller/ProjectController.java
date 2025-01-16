@@ -5,10 +5,7 @@ import com.edj.teamoop.service.cache.ProjectCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/project")
@@ -25,5 +22,11 @@ public class ProjectController {
         } else {
             return ResponseEntity.ok(projectPage);
         }
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<ProjectDTO> getProjectById(@PathVariable("id") Long projectId) {
+        ProjectDTO projectDTO = projectCacheService.getCachedEntity(projectId);
+        return ResponseEntity.ok(projectDTO);
     }
 }

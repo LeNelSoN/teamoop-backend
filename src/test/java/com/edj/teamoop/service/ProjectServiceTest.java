@@ -1,6 +1,7 @@
 package com.edj.teamoop.service;
 
 import com.edj.teamoop.dto.ProjectDTO;
+import com.edj.teamoop.exception.ProjectNotFoundException;
 import com.edj.teamoop.mapper.ProjectMapper;
 import com.edj.teamoop.model.Project;
 import com.edj.teamoop.repository.ProjectRepository;
@@ -9,14 +10,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,5 +95,36 @@ public class ProjectServiceTest {
 
         assertThat(result.getSize()).isLessThanOrEqualTo(50);
         verify(projectRepository, times(1)).findAll(PageRequest.of(0, 50));
+    }
+
+    @Test
+    void testGetProjectById_OK() {
+        Project project = new Project(1L, "Project Alpha", "Description Alpha", LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1), true);
+        ProjectDTO projectDTO =  new ProjectDTO(1L, "Project Alpha DTO", "Description Alpha", LocalDate.of(2023, 1, 1), LocalDate.of(2024, 1, 1), true);
+
+        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(projectMapper.toDTO(project)).thenReturn(projectDTO);
+
+        ProjectDTO projectResult = projectService.getProjectById(1L);
+
+        assertNotNull(projectResult);
+        assertEquals(1L, projectResult.getId());
+        assertEquals("Project Alpha DTO", projectResult.getName());
+
+        verify(projectRepository, times(1)).findById(1L);
+        verify(projectMapper, times(1)).toDTO(project);
+    }
+
+    @Test
+    void testGetProjectById_whenProjectDoesNotExist() {
+        when(projectRepository.findById(2L)).thenReturn(Optional.empty());
+
+        ProjectNotFoundException exception = assertThrows(ProjectNotFoundException.class, () -> {
+            projectService.getProjectById(2L);
+        });
+
+        assertEquals("The project with ID 2 does not exist.", exception.getMessage());
+        verify(projectRepository, times(1)).findById(2L);
+        verify(projectMapper, never()).toDTO(any());
     }
 }
