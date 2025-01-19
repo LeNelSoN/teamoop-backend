@@ -5,6 +5,10 @@ spring:
     enabled: false
   profiles:
     active: dev
+  liquibase:
+    change-log: classpath:db/changelog/master.xml
+    enabled: true
+    contexts: dev
   data:
     jpa:
       repositories:

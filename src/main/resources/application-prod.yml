@@ -6,6 +6,10 @@ spring:
     username: username
     password: password
     driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:db/changelog/master.xml
+    enabled: true
+    contexts: prod
   security:
     enabled: true
 
