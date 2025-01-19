@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="project-notification" author="guillaumesubra1">
+        <createTable tableName="project_notification">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="project" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notification" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="notification"
+                                 baseTableName="project_notification"
+                                 constraintName="fk_project_notification"
+                                 referencedColumnNames="id"
+                                 referencedTableName="notification"/>
+        <addForeignKeyConstraint baseColumnNames="project"
+                                 baseTableName="project_notification"
+                                 constraintName="fk_project_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="project"/>
+        <addForeignKeyConstraint baseColumnNames="user"
+                                 baseTableName="project_notification"
+                                 constraintName="fk_notification_user"
+                                 referencedColumnNames="id"
+                                 referencedTableName="user"/>
+    </changeSet>
+</databaseChangeLog>

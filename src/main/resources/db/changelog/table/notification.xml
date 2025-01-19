@@ -16,33 +16,7 @@
             <column name="type" type="varchar">
                 <constraints nullable="false"/>
             </column>
-            <column name="content" type="varchar">
-                <constraints nullable="false"/>
-            </column>
-            <column name="user" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="project" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="date" type="timestamp"/>
         </createTable>
-        <addForeignKeyConstraint baseColumnNames="project"
-                                 baseTableName="notification"
-                                 constraintName="fk_notification_project_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 referencedColumnNames="id"
-                                 referencedTableName="project"
-                                 validate="true"/>
-        <addForeignKeyConstraint baseColumnNames="user"
-                                 baseTableName="notification"
-                                 constraintName="fk_notification_user_id"
-                                 deferrable="false"
-                                 initiallyDeferred="false"
-                                 referencedColumnNames="id"
-                                 referencedTableName="user"
-                                 validate="true"/>
         <addForeignKeyConstraint baseColumnNames="type"
                                  baseTableName="notification"
                                  constraintName="fk_notification_type"

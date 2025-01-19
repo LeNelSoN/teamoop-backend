@@ -17,5 +17,6 @@
     <include file="db/changelog/table/type.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/table/notification.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/table/project-tag.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/table/project-notification.xml" relativeToChangelogFile="false"/>
 
 </databaseChangeLog>
