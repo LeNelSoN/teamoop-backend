@@ -27,7 +27,7 @@
         </createTable>
         <addForeignKeyConstraint baseColumnNames="project"
                                  baseTableName="comment"
-                                 constraintName="fk_comment_project_id"
+                                 constraintName="fk_comment_project"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  referencedColumnNames="id"
@@ -35,7 +35,7 @@
                                  validate="true"/>
         <addForeignKeyConstraint baseColumnNames="user"
                                  baseTableName="comment"
-                                 constraintName="fk_comment_user_id"
+                                 constraintName="fk_comment_user"
                                  deferrable="false"
                                  initiallyDeferred="false"
                                  referencedColumnNames="id"
