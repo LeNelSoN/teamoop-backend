@@ -26,17 +26,17 @@
 
         <addForeignKeyConstraint baseColumnNames="notification"
                                  baseTableName="project_notification"
-                                 constraintName="fk_project_notification"
+                                 constraintName="fk_project_notification_notification"
                                  referencedColumnNames="id"
                                  referencedTableName="notification"/>
         <addForeignKeyConstraint baseColumnNames="project"
                                  baseTableName="project_notification"
-                                 constraintName="fk_project_id"
+                                 constraintName="fk_project_notification_project"
                                  referencedColumnNames="id"
                                  referencedTableName="project"/>
         <addForeignKeyConstraint baseColumnNames="user"
                                  baseTableName="project_notification"
-                                 constraintName="fk_notification_user"
+                                 constraintName="fk_project_notification_user"
                                  referencedColumnNames="id"
                                  referencedTableName="user"/>
     </changeSet>

@@ -18,13 +18,13 @@
 
         <addForeignKeyConstraint baseColumnNames="tag"
                                  baseTableName="project_tag"
-                                 constraintName="fk_tag_id"
+                                 constraintName="fk_tag_tag"
                                  referencedColumnNames="name"
                                  referencedTableName="tag"/>
 
         <addForeignKeyConstraint baseColumnNames="project"
                                  baseTableName="project_tag"
-                                 constraintName="fk_project_id"
+                                 constraintName="fk_tag_project"
                                  referencedColumnNames="id"
                                  referencedTableName="project"/>
 
