@@ -8,7 +8,6 @@ services:
       - teamoop-network
     command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
   database:
-    image: postgres
     image: postgres:12-alpine
     container_name: backend
     environment:
