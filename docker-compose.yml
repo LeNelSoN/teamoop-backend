@@ -9,6 +9,7 @@ services:
     command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
   database:
     image: postgres
+    image: postgres:12-alpine
     environment:
       - POSTGRES_DB=teamoopdb
       - POSTGRES_USER=teamoop
