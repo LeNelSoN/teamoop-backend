@@ -1,12 +1,15 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: username
-    password: password
+    url: jdbc:postgresql://localhost:1245/teamoopdb
+    username: teamoop
+    password: teamoop
   h2:
     console:
       enabled: true
+  liquibase:
+    change-log: classpath:db/changelog/master.xml
+    enabled: true
+    contexts: dev
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
