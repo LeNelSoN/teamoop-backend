@@ -7,6 +7,15 @@ services:
     networks:
       - teamoop-network
     command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
+  database:
+    image: postgres:12-alpine
+    container_name: backend
+    environment:
+      - POSTGRES_DB=teamoopdb
+      - POSTGRES_USER=teamoop
+      - POSTGRES_PASSWORD=teamoop
+    ports:
+      - 1245:5432
 
 networks:
   teamoop-network:

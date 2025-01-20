@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="project-tag" author="guillaumesubra1">
+        <createTable tableName="project_tag">
+            <column name="tag" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="tag, project" tableName="project_tag"/>
+
+        <addForeignKeyConstraint baseColumnNames="tag"
+                                 baseTableName="project_tag"
+                                 constraintName="fk_tag_tag"
+                                 referencedColumnNames="name"
+                                 referencedTableName="tag"/>
+
+        <addForeignKeyConstraint baseColumnNames="project"
+                                 baseTableName="project_tag"
+                                 constraintName="fk_tag_project"
+                                 referencedColumnNames="id"
+                                 referencedTableName="project"/>
+
+
+    </changeSet>
+</databaseChangeLog>
