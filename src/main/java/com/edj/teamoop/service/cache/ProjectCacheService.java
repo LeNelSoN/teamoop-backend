@@ -7,15 +7,20 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
-public class ProjectCacheService implements PageCacheService{
+public class ProjectCacheService {
     @Autowired
     private ProjectService projectService;
 
-    @Override
     @Cacheable(value = "projects", key = "'page:' + #page + '-size:' + #size")
     public Page<ProjectDTO> getCachedPage(int page, int size) {
         return projectService.getAllProjects(page, size);
     }
 
+    @Cacheable(value = "projects", key = "'projectId:' + #id")
+    public ProjectDTO getCachedEntity(Long id) {
+        return projectService.getProjectById(id);
+    }
 }

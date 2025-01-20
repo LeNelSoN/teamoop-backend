@@ -77,5 +77,23 @@ public class ProjectControllerIT {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void testGetProjectById_ReturnsProject() throws Exception {
+        Project project = projectRepository.save(new Project(1L, "Project Alpha", "Description Alpha", LocalDate.now(), LocalDate.now().plusDays(10), true));
+
+        mockMvc.perform(get("/api/project/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Project Alpha"))
+                .andExpect(jsonPath("$.description").value("Description Alpha"));
+    }
+
+    @Test
+    void testGetProjectById_NotFound() throws Exception {
+        mockMvc.perform(get("/api/project/{id}", 999L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }
 

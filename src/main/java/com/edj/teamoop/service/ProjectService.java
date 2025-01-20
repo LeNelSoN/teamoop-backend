@@ -32,9 +32,10 @@ public class ProjectService {
         return projectPage.map(projectMapper::toDTO);
     }
 
-    public Project getProjectById(Long id) {
-        Optional<Project> project = projectRepository.findById(id);
-        return project.orElseThrow(()-> new ProjectNotFoundException(String.format("The project with ID %s does not exist.", id)));
+    public ProjectDTO getProjectById(Long id) {
+        return projectRepository.findById(id)
+                .map(projectMapper::toDTO)
+                .orElseThrow(()-> new ProjectNotFoundException(String.format("The project with ID %s does not exist.", id)));
     }
 
     public void deleteProjectById(Long id) {
