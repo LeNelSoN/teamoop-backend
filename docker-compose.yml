@@ -1,4 +1,9 @@
 services:
+  app-backend:
+    image: ghcr.io/lenelson/teamoop-backend:latest
+    container_name: teamoop-backend
+    ports:
+      - 8080:8080
   redis:
     image: redis:7.4.2
     container_name: redis
