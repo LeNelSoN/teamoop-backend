@@ -108,3 +108,22 @@ mvn spring-boot:run
 ## Rapports de couverture
 - Un rapport **JaCoCo** est généré automatiquement lors des builds **CI/CD**.
 - Vous pouvez le télécharger depuis les artifacts du workflow **GitHub**.
+
+---
+
+## Gestion des dépendances avec Dependabot
+Ce projet utilise Dependabot pour maintenir les dépendances à jour. 
+Dependabot est un outil qui génère automatiquement des pull requests pour 
+les mises à jour des dépendances déclarées dans le fichier `pom.xml`
+
+### Configuration actuelle
+Dependabot est configuré pour :
+
+- Mettre à jour les dépendances définies dans le fichier `pom.xml`.
+- Générer une pull request pour chaque mise à jour détectée.
+- Vérifier les mises à jour sur une base hebdomadaire.
+
+### Avant de fusionner une pull request de Dependabot
+
+- Lisez la description pour comprendre les impacts de la mise à jour.
+> ⚠️ Attention : Assurez-vous de vérifier les mises à jour critiques pour éviter des problèmes de compatibilité.
