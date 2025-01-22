@@ -9,13 +9,13 @@ services:
     command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
   database:
     image: postgres:12-alpine
-    container_name: backend
+    container_name: pg-db
     environment:
       - POSTGRES_DB=teamoopdb
       - POSTGRES_USER=teamoop
       - POSTGRES_PASSWORD=teamoop
     ports:
-      - 1245:5432
+      - "1245:5432"
 
 networks:
   teamoop-network:
