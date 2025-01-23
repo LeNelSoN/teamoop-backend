@@ -21,7 +21,7 @@
 		<springdoc.version>2.7.0</springdoc.version>
 		<mapstruct.version>1.5.5.Final</mapstruct.version>
 		<lombok.version>1.18.34</lombok.version>
-		<mockito.version>5.2.0</mockito.version>
+		<mockito.version>5.15.2</mockito.version>
 		<jacoco.version>0.8.10</jacoco.version>
 		<postgresql.version>42.5.5</postgresql.version>
 		<h2.version>2.1.214</h2.version>
