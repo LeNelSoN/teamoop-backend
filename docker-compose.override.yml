@@ -1,6 +1,6 @@
 services:
   app:
-    image: teamoop-backend:test
+    image: ghcr.io/lenelson/teamoop-backend:latest
     container_name: app-back
     ports:
       - "8080:8080"
