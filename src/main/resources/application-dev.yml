@@ -1,8 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:1245/teamoopdb
-    username: teamoop
-    password: teamoop
+    url: ${SPRING_DATABASE_URL}
+    initialization-mode: none
+    username: ${SPRING_DATABASE_USERNAME}
+    password: ${SPRING_DATABASE_PASSWORD}
   liquibase:
     change-log: classpath:db/changelog/master.xml
     enabled: true
@@ -11,7 +12,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
 
 redis:
   host: localhost

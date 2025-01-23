@@ -1,31 +1,35 @@
 services:
-  db:
-    image: postgres:alpine
-    container_name: postgres-db
-    restart: always
+  app-back:
+    image: teamoop-backend:test
     ports:
-      - 1245:5432
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - "8080:8080"
+    networks:
+      - teamoop-network
     environment:
-      POSTGRES_DB: teamoopdb
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
-
-  adminer:
-    image: adminer
+      - SPRING_DATABASE_URL=${SPRING_DATABASE_URL}
+      - SPRING_DATABASE_USERNAME=${SPRING_DATABASE_USERNAME}
+      - SPRING_DATABASE_PASSWORD=${SPRING_DATABASE_PASSWORD}
+      - SPRING_PROFILES_ACTIVE=prod
+    depends_on:
+      - redis
+      - pg-db
+  pg-db:
+    image: postgres:alpine
     restart: always
     ports:
-      - 8081:8080
+      - 5432:5432
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   redis:
     image: redis:7.4.2
-    container_name: redis
     ports:
       - "6379:6379"
     networks:
       - teamoop-network
-    command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${SPRING_REDIS_PASSWORD}"]
 
 networks:
   teamoop-network:
