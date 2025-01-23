@@ -1,0 +1,16 @@
+services:
+  app:
+    image: teamoop-backend:test
+    container_name: app-back
+    ports:
+      - "8080:8080"
+    networks:
+      - teamoop-network
+    environment:
+      - SPRING_DATABASE_URL=jdbc:postgresql://pg-db:5432/teamoopdb
+      - SPRING_DATABASE_USERNAME=teamoop
+      - SPRING_DATABASE_PASSWORD=teamoop
+      - SPRING_PROFILES_ACTIVE=dev
+    depends_on:
+      - redis
+      - database
