@@ -99,7 +99,7 @@ jobs:
 
       - name: Test Docker Image
         run: |
-          docker run --rm -d --name test-container ghcr.io/${{ env.OWNER }}/teamoop-backend:${{ env.IMAGE_TAG }}
+          docker run --rm -d --name test-container -e SPRING_PROFILES_ACTIVE=test ghcr.io/${{ env.OWNER }}/teamoop-backend:${{ env.IMAGE_TAG }}
           sleep 5
           docker logs test-container
           docker stop test-container
