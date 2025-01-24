@@ -55,6 +55,10 @@ Exécution des tests unitaire et de composant :
 ```bash
  mvn test
 ```
+
+Remarque : 
+
+Si le lancement des tests échoue,veuiller à bien eteindre les containers docker du projet
 ## Swagger UI
 
 - **Swagger UI** est disponible à l'adresse suivante : 
