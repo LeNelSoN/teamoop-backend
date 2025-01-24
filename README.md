@@ -22,11 +22,26 @@ cd teamoop-backend
 
 ### 2. Construire et exécuter le projet
 
-Utilisez Maven pour compiler et exécuter l'application.
+Utilisez docker pour compiler et éxécuter l'application
 
+Si vous souhaitez developper sur le projet
 ```bash
-mvn clean install
-mvn spring-boot:run
+docker compose -f docker-compose-dev.yml up -d
+```
+Lorsque des modifications sont effectués le code est automatiquement recompilé depuis docker en environ 20s.
+
+> __Remarque :__ Si vous utilisez __IntelliJ IDEA__ comme outil de développement, après avoir ajouté la dépendance `devtools`,  
+> activez les propriétés suivantes :
+>
+> 1. Allez dans __IntelliJ IDEA -> Préférences -> Build, Execution, Deployment -> Compiler__  
+     > et activez l'option `Build project automatically`.
+>
+> 2. Allez dans __IntelliJ IDEA -> Préférences -> Paramètres avancés__  
+     > et activez l'option `Allow auto-make to start even if developed application is currently running`.
+
+Pour une utilisation si vous travaillez sur le projet frontend
+```bash
+docker compose up -d
 ```
 
 ### 3. Accédez à l'API :
@@ -34,55 +49,12 @@ mvn spring-boot:run
 - Par défaut, l'application est disponible sur le port 8080.
 - Endpoint principal : http://localhost:8080/api/hello
 
----
+## Tests
 
-## Lancer avec Docker
-
-### 1. Construisez l'image Docker :
-
+Exécution des tests unitaire et de composant :
 ```bash
-docker build -t teamoop-backend:latest .
+ mvn test
 ```
-
-### 2. Lancez le conteneur :
-
-```bash
-docker run -p 8080:8080 teamoop-backend:latest
-```
-
-## Ou utilisait l'image public
-Si vous ne souhaitez pas construire l'image Docker localement, utilisez celle hébergée sur **GitHub Container Registry** :
-```bash
-docker pull ghcr.io/lenelson/teamoop-backend:latest
-docker run -p 8080:8080 ghcr.io/lenelson/teamoop-backend:latest
-```
-
-### 3. Accédez à l'API :
-
-http://localhost:8080/api/hello
-
----
-
-## Redis
-Avant de démarrer l'application Spring Boot, il est nécessaire de faire tourner Redis dans un conteneur Docker.
-
-### 1. Lancer Redis avec Docker Compose
-Dans le répertoire du projet, exécutez la commande suivante pour démarrer Redis :
-
-```bash
-docker-compose up
-```
-Cela démarrera Redis dans un conteneur, accessible à l'adresse http://localhost:6379.
-
-### 2. Lancer l'application Spring Boot
-Une fois Redis lancé, vous pouvez démarrer l'application Spring Boot comme d'habitude :
-
-```bash
-mvn spring-boot:run
-```
-
----
-
 ## Swagger UI
 
 - **Swagger UI** est disponible à l'adresse suivante : 
@@ -91,11 +63,7 @@ mvn spring-boot:run
 - Endpoint des spécifications **OpenAPI** : 
   - http://localhost:8080/v3/api-docs
 
-### Si l'interface rencontre un problème
-```bash
-mvn clean install
-mvn spring-boot:run
-```
+Si l'interface swagger rencontre un problème il faudra rebuild le conteneur docker
 
 ---
 ## Déploiement avec CI/CD

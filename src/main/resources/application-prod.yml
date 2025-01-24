@@ -16,13 +16,12 @@ spring:
     show-sql: false
     hibernate:
       ddl-auto: none
-
-redis:
-  host: localhost
-  port: 6379
-  password: password
-  ttl:
-    duration: 10m
+  redis:
+    host: localhost
+    port: 6379
+    password: password
+    ttl:
+      duration: 10m
 
 management:
   endpoint:
