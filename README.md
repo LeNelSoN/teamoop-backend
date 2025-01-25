@@ -24,9 +24,10 @@ cd teamoop-backend
 
 Utilisez docker pour compiler et éxécuter l'application
 
-Si vous souhaitez developper sur le projet
+Si vous souhaitez développer sur le projet
 ```bash
 docker compose -f docker-compose-dev.yml up -d
+mvn spring-boot:run
 ```
 Lorsque des modifications sont effectués le code est automatiquement recompilé depuis docker en environ 20s.
 
@@ -44,6 +45,15 @@ Pour une utilisation si vous travaillez sur le projet frontend
 docker compose up -d
 ```
 
+### Remarques :
+
+Vérifier que le port 5432 n'est pas prit sur votre machine par une installation postgres local
+
+Si les dépendances du projet sont mis-à-jour recompiler le projet : 
+
+```bash
+mvn clean install
+```
 ### 3. Accédez à l'API :
 
 - Par défaut, l'application est disponible sur le port 8080.
