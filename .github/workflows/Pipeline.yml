@@ -41,12 +41,6 @@ jobs:
           name: teamoop-backend-jar
           path: target/*SNAPSHOT.jar
 
-      - name: Upload JaCoCo Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-html-report
-          path: target/site/jacoco
-
       - name: Post Comment with Report Link
         uses: marocchino/sticky-pull-request-comment@v2
         with:
