@@ -41,16 +41,11 @@ jobs:
           name: teamoop-backend-jar
           path: target/*SNAPSHOT.jar
 
-      - name: Post Comment with Report Link
-        uses: marocchino/sticky-pull-request-comment@v2
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v4
         with:
-          header: Code Coverage
-          message: |
-            ### Code Coverage Report
-            - A full JaCoCo report is available in the artifacts of this workflow.
-            - You can download it [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          name: jacoco-html-report
+          path: target/site/jacoco
 
   docker-build-and-push:
     needs: build-and-test
