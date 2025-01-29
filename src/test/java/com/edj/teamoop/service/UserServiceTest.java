@@ -71,7 +71,7 @@ public class UserServiceTest {
             userService.createUser(userDTO);
         });
 
-        assertEquals("L'email test@gmail.com est déjà utilisé.", exception.getMessage());
+        assertEquals("Email test@gmail.com is already used !", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -86,7 +86,7 @@ public class UserServiceTest {
             userService.createUser(userDTO);
         });
 
-        assertEquals("Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.", exception.getMessage());
+        assertEquals("The password must contain at least 12 characters, an uppercase letter, a lowercase letter, a number and a special character.", exception.getMessage());
 
         verify(userRepository, never()).save(any(User.class));
     }
@@ -102,6 +102,6 @@ public class UserServiceTest {
             userService.createUser(userDTO);
         });
 
-        assertEquals("Les champs nom, email et mot de passe sont obligatoires.", exception.getMessage());
+        assertEquals("The name, email and password fields are required.", exception.getMessage());
     }
 }
