@@ -1,6 +1,6 @@
 services:
   app-back:
-    image: teamoop-backend:test
+    image: ghcr.io/lenelson/teamoop-backend:latest
     ports:
       - "8080:8080"
     networks:
@@ -17,7 +17,7 @@ services:
     image: postgres:alpine
     restart: always
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}

@@ -1,30 +1,19 @@
+include:
+ - docker-compose-dev.yml
+
 services:
-  redis:
-    image: redis:7.4.2
-    container_name: redis
+  app:
+    image: ghcr.io/lenelson/teamoop-backend:latest
+    container_name: app-back
     ports:
-      - "6379:6379"
-    networks:
-      - teamoop-network
-    command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
-
-  database:
-    image: postgres:12-alpine
-    container_name: pg-db
-    networks:
-      - teamoop-network
+      - "8080:8080"
     environment:
-      - POSTGRES_DB=teamoopdb
-      - POSTGRES_USER=teamoop
-      - POSTGRES_PASSWORD=teamoop
-    ports:
-      - "5432:5432"
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - "8081:8080"
-
-networks:
-  teamoop-network:
+      - SPRING_DATABASE_URL=jdbc:postgresql://pg-db:5432/teamoopdb
+      - SPRING_DATABASE_USERNAME=teamoop
+      - SPRING_DATABASE_PASSWORD=teamoop
+      - SPRING_PROFILES_ACTIVE=ci
+    depends_on:
+      - redis
+      - database
+    networks:
+      - teamoop-network

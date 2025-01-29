@@ -12,7 +12,7 @@ import java.time.Duration;
 @Configuration
 public class CacheConfig {
 
-    @Value("${redis.ttl.duration}")
+    @Value("${spring.redis.ttl.duration}")
     private Duration RedisTTL;
 
     @Bean
