@@ -13,7 +13,7 @@ WORKDIR /app
 
 COPY --from=builder /app/target/*.jar /app/app.jar
 
-RUN addgroup --system app && adduser -S -s /bin/false -G app app
+RUN addgroup -S app && adduser -S -G app app
 RUN chown -R app:app /app
 
 USER app
