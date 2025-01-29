@@ -9,13 +9,12 @@ RUN ./mvnw clean install -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 
 LABEL maintainer="LeNelSoN"
+
+RUN addgroup -S app && adduser -S -G app app
+USER app
 WORKDIR /app
 
 COPY --from=builder /app/target/*.jar /app/app.jar
 
-RUN addgroup -S app && adduser -S -G app app
-RUN chown -R app:app /app
-
-USER app
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
