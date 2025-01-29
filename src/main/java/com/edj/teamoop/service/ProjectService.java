@@ -54,4 +54,16 @@ public class ProjectService {
     public List<Project> getActiveProjects() {
         return projectRepository.findByActiveTrue();
     }
+
+    public ProjectDTO createProject(ProjectDTO projectDTO) {
+        Project project = projectMapper.toEntity(projectDTO);
+        project = projectRepository.save(project);
+        return projectMapper.toDTO(project);
+    }
+
+    public ProjectDTO updateProject(ProjectDTO projectDTO) {
+        Project project = projectMapper.toEntity(projectDTO);
+        project = projectRepository.save(project);
+        return projectMapper.toDTO(project);
+    }
 }

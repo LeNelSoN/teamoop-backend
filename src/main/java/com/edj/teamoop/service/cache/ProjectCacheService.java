@@ -23,4 +23,20 @@ public class ProjectCacheService {
     public ProjectDTO getCachedEntity(Long id) {
         return projectService.getProjectById(id);
     }
+
+    public ProjectDTO createProject(ProjectDTO project) {
+        return projectService.createProject(project);
+    }
+
+    public ProjectDTO deleteProject(Long projectId) {
+        ProjectDTO project = projectService.getProjectById(projectId);
+        projectService.deleteProjectById(projectId);
+        return project;
+    }
+
+
+    public ProjectDTO updateProject(Long projectId, ProjectDTO projectDTO) {
+        projectDTO.setId(projectId);
+        return projectService.updateProject(projectDTO);
+    }
 }

@@ -1,7 +1,6 @@
 spring:
   datasource:
     url: ${SPRING_DATABASE_URL}
-    initialization-mode: none
     username: ${SPRING_DATABASE_USERNAME}
     password: ${SPRING_DATABASE_PASSWORD}
   liquibase:
@@ -13,6 +12,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+  sql:
+    init:
+      mode: always
 
 redis:
   host: localhost
