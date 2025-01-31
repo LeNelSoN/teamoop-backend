@@ -2,10 +2,6 @@ package com.edj.teamoop.controller;
 
 import com.edj.teamoop.dto.AuthenticationDTO;
 import com.edj.teamoop.service.JwtService;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,6 +41,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("User created !");
     }
 
+    @PostMapping(path = "/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationDTO authenticationDTO) {
 
         var user = userService.findByEmail(authenticationDTO.email());
