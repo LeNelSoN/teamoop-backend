@@ -29,7 +29,6 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         return (UserDetails) this.userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found !"));
     }
 
@@ -42,7 +41,7 @@ public class UserService implements UserDetailsService {
         }
 
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new EmailAlreadyExistsException("Email" + userDTO.getEmail() + "is already used !");
+            throw new EmailAlreadyExistsException("Email " + userDTO.getEmail() + " already used !");
         }
 
         if (!Pattern.matches(PASSWORD_REGEX, userDTO.getPassword())) {
@@ -57,5 +56,9 @@ public class UserService implements UserDetailsService {
         user.setPassword(hashedPassword);
 
         userRepository.save(user);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 }

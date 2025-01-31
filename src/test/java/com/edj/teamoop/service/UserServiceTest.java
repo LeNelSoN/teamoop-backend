@@ -71,7 +71,7 @@ public class UserServiceTest {
             userService.createUser(userDTO);
         });
 
-        assertEquals("Email test@gmail.com is already used !", exception.getMessage());
+        assertEquals("Email test@gmail.com already used !", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 

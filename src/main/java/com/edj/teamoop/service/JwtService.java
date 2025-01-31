@@ -5,20 +5,25 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
-@AllArgsConstructor
 @Service
 public class JwtService {
 
+    private final UserService userService;
+    private final String encryptionKey;
+
     @Autowired
-    private UserService userService;
+    public JwtService(UserService userService, @Value("${encryption.key}") String encryptionKey) {
+        this.userService = userService;
+        this.encryptionKey = encryptionKey;
+    }
 
     public Map<String, String> generate(String username) {
 
@@ -29,7 +34,7 @@ public class JwtService {
 
     private Map<String, String> generateJwt(User user) {
 
-        Map<String, String> claims = Map.of(
+        Map<String, Object> claims = Map.of(
                 "email", user.getEmail(),
                 "name", user.getName()
         );
@@ -41,7 +46,7 @@ public class JwtService {
                 .setIssuedAt(new Date(currentTime))
                 .setExpiration(new Date(expirationTime))
                 .setSubject(user.getEmail())
-                .setClaims(claims)
+                .addClaims(claims)
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -50,8 +55,7 @@ public class JwtService {
 
     private Key getKey() {
 
-        final String ENCRYPTION_KEY = "f63c2c3e88bbd9c7d18666299249135eac8ae93f4793a134e60ff458da96d0c0";
-        final byte[] decoder = Decoders.BASE64.decode(ENCRYPTION_KEY);
+        final byte[] decoder = Decoders.BASE64.decode(encryptionKey);
 
         return Keys.hmacShaKeyFor(decoder);
     }

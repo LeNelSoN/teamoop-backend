@@ -1,11 +1,12 @@
 package com.edj.teamoop.controller;
 
-import com.edj.teamoop.dto.AuthentifcationDTO;
+import com.edj.teamoop.dto.AuthenticationDTO;
 import com.edj.teamoop.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,13 +31,13 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @PostMapping
     public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
@@ -45,18 +46,14 @@ public class UserController {
     }
 
     @PostMapping(path = "/login")
-    public Map<String, String> login(@RequestBody AuthentifcationDTO authentifcationDTO) {
+    public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationDTO authenticationDTO) {
 
-        try {
-            final Authentication authenticate = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authentifcationDTO.email(), authentifcationDTO.password())
-            );
-
-            return jwtService.generate(authentifcationDTO.email());
-
-        } catch (AuthenticationException e) {
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials")).getBody();
+        var user = userService.findByEmail(authenticationDTO.email());
+        if (user == null || !passwordEncoder.matches(authenticationDTO.password(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials"));
         }
+
+        Map<String, String> token = jwtService.generate(authenticationDTO.email());
+        return ResponseEntity.ok(token);
     }
 }
