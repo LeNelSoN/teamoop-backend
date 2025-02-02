@@ -48,6 +48,7 @@ public class UserControllerIT {
         verify(userService, times(1)).createUser(any(UserDTO.class));
     }
 
+    @Test
     void testAddUser_EmailAlreadyExists() throws Exception {
     
         String userJson = """
@@ -70,4 +71,6 @@ public class UserControllerIT {
 
         verify(userService, times(1)).createUser(any(UserDTO.class));
     }
+
+
 }
