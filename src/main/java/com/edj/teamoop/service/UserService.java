@@ -2,6 +2,7 @@ package com.edj.teamoop.service;
 
 import java.util.regex.Pattern;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -58,7 +59,17 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElse(null);
+    public UserDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found !"));
+
+        return new UserDTO(
+                user.getId(),
+                user.getEmail(),
+                user.getName(),
+                user.getPassword(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        );
     }
 }

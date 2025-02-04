@@ -1,5 +1,6 @@
 package com.edj.teamoop.service;
 
+import com.edj.teamoop.dto.UserDTO;
 import com.edj.teamoop.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

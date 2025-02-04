@@ -1,6 +1,7 @@
 package com.edj.teamoop.controller;
 
 import com.edj.teamoop.dto.AuthenticationDTO;
+import com.edj.teamoop.dto.UserDTO;
 import com.edj.teamoop.model.User;
 import com.edj.teamoop.service.JwtService;
 import com.edj.teamoop.service.JwtServiceTest;
@@ -18,7 +19,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 public class AuthControllerTest {
@@ -44,7 +44,7 @@ public class AuthControllerTest {
     void login_shouldReturnTokenWhenCredentialsValid() {
 
         AuthenticationDTO authenticationDTO = new AuthenticationDTO("test@example.com", "password123");
-        User mockUser = new User();
+        UserDTO mockUser = new UserDTO();
         mockUser.setEmail("test@example.com");
         mockUser.setPassword("encodedPassword");
 
