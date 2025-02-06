@@ -2,6 +2,7 @@ package com.edj.teamoop.service;
 
 import com.edj.teamoop.dto.UserDTO;
 import com.edj.teamoop.model.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -21,7 +22,7 @@ public class JwtService {
     private final String encryptionKey;
 
     @Autowired
-    public JwtService(UserService userService, @Value("${encryption.key}") String encryptionKey) {
+    public JwtService(UserService userService, @Value("${spring.encryption.key}") String encryptionKey) {
         this.userService = userService;
         this.encryptionKey = encryptionKey;
     }
@@ -52,6 +53,35 @@ public class JwtService {
                 .compact();
 
         return Map.of("bearer", bearer);
+    }
+
+    public boolean isValidToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Map<String, String> extractUserInfoFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            String email = claims.get("email", String.class);
+            String name = claims.get("name", String.class);
+
+            return Map.of("email", email, "name", name);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private Key getKey() {

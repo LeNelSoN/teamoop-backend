@@ -1,16 +1,15 @@
 package com.edj.teamoop.controller;
 
 import com.edj.teamoop.dto.AuthenticationDTO;
+import com.edj.teamoop.mapper.UserMapper;
 import com.edj.teamoop.service.JwtService;
+import com.edj.teamoop.service.NotificationService;
+import com.edj.teamoop.utility.SecurityContextUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.edj.teamoop.dto.UserDTO;
 import com.edj.teamoop.service.UserService;
-
-import org.springframework.web.bind.annotation.RequestBody;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -23,17 +22,23 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping(path = "/api/users", consumes = APPLICATION_JSON_VALUE)
+@RequestMapping(path = "/api/user", consumes = APPLICATION_JSON_VALUE)
 public class UserController {
 
     @Autowired
     private UserService userService;
 
     @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
     private JwtService jwtService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @PostMapping
     public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
@@ -51,5 +56,10 @@ public class UserController {
 
         Map<String, String> token = jwtService.generate(authenticationDTO.email());
         return ResponseEntity.ok(token);
+    }
+
+    @GetMapping(path = "/me")
+    public ResponseEntity<UserDTO> getUserInfo() {
+        return ResponseEntity.ok(userService.findByEmail(SecurityContextUtil.getUserPrincipal()));
     }
 }

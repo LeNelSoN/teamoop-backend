@@ -1,5 +1,6 @@
 package com.edj.teamoop.model.Notification;
 
+import com.edj.teamoop.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +17,9 @@ public abstract class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "is_read", nullable = false)
     private boolean isRead;

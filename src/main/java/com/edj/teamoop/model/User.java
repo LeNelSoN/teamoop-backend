@@ -1,5 +1,6 @@
 package com.edj.teamoop.model;
 
+import com.edj.teamoop.model.Notification.Notification;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,6 +10,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Data
@@ -36,6 +38,9 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private LocalDate updatedAt;
 
+    @OneToMany(mappedBy = "user")
+    private List<Notification> notifications;
+    
     @PrePersist
     protected void onCreate() {
         if (this.createdAt == null) {
