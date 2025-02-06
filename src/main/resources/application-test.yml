@@ -8,7 +8,7 @@ spring:
     type: simple
   liquibase:
     change-log: classpath:db/changelog/master.xml
-    enabled: true
+    enabled: false
     contexts: test
   h2:
     console:
