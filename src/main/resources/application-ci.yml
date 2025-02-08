@@ -1,12 +1,9 @@
 spring:
   datasource:
     url: ${SPRING_DATABASE_URL}
+    initialization-mode: none
     username: ${SPRING_DATABASE_USERNAME}
     password: ${SPRING_DATABASE_PASSWORD}
-    url: jdbc:postgresql://localhost:5432/teamoopdb
-    initialization-mode: none
-    username: teamoop
-    password: teamoop
   liquibase:
     change-log: classpath:db/changelog/master.xml
     enabled: true
@@ -16,18 +13,8 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
-  sql:
-    init:
-      mode: always
-
-redis:
-  host: localhost
-  port: 6379
-  password: password
-  ttl:
-    duration: 10m
   redis:
-    host: localhost
+    host: redis
     port: 6379
     password: password
     ttl:

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public abstract class Notification {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,5 +23,4 @@ public abstract class Notification {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
-
 }
