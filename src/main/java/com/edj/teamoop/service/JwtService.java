@@ -19,7 +19,7 @@ public class JwtService {
     private final String encryptionKey;
 
     @Autowired
-    public JwtService(UserService userService, @Value("${encryption.key}") String encryptionKey) {
+    public JwtService(UserService userService, @Value("${spring.encryption.key}") String encryptionKey) {
         this.userService = userService;
         this.encryptionKey = encryptionKey;
     }
