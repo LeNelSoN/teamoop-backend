@@ -26,8 +26,6 @@ public class JwtServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         jwtService = new JwtService(userService, encryptionKey);
     }
 
