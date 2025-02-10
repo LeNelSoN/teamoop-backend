@@ -13,6 +13,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update
+
+  encryption:
+    key: 6de26826430254c3f53d73f3a046b1cd64869b8b73e15311227d9366ea220c49
+
   redis:
     host: localhost
     port: 6379

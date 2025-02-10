@@ -13,8 +13,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -28,6 +27,9 @@ public class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtServiceTest jwtService;
 
     @BeforeEach
     void setUp() {
@@ -71,7 +73,7 @@ public class UserServiceTest {
             userService.createUser(userDTO);
         });
 
-        assertEquals("L'email test@gmail.com est déjà utilisé.", exception.getMessage());
+        assertEquals("Email test@gmail.com already used !", exception.getMessage());
         verify(userRepository, never()).save(any(User.class));
     }
 
@@ -86,7 +88,7 @@ public class UserServiceTest {
             userService.createUser(userDTO);
         });
 
-        assertEquals("Le mot de passe doit contenir au moins 12 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.", exception.getMessage());
+        assertEquals("The password must contain at least 12 characters, an uppercase letter, a lowercase letter, a number and a special character.", exception.getMessage());
 
         verify(userRepository, never()).save(any(User.class));
     }
@@ -102,6 +104,6 @@ public class UserServiceTest {
             userService.createUser(userDTO);
         });
 
-        assertEquals("Les champs nom, email et mot de passe sont obligatoires.", exception.getMessage());
+        assertEquals("The name, email and password fields are required.", exception.getMessage());
     }
 }

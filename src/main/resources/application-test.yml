@@ -8,7 +8,7 @@ spring:
     type: simple
   liquibase:
     change-log: classpath:db/changelog/master.xml
-    enabled: true
+    enabled: false
     contexts: test
   h2:
     console:
@@ -18,6 +18,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+
+  encryption:
+    key: 5fd4d6432f2545ceb0078a3a992f31537c7c0fe65d31539d1bf403fb7bd0c596
+
   redis:
     host: localhost
     port: 6379
