@@ -1,5 +1,11 @@
 package com.edj.teamoop.service;
 
+import com.edj.teamoop.dto.UserDTO;
+import com.edj.teamoop.model.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import com.edj.teamoop.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -42,17 +48,49 @@ public class JwtService {
         final long expirationTime = currentTime + 30 * 60 * 1000;
 
          String bearer = Jwts.builder()
-             .issuedAt(new Date(currentTime))
-             .expiration(new Date(expirationTime))
-             .subject(user.getEmail())
-             .claims(claims)
-             .signWith(getKey())
-             .compact();
+                .setIssuedAt(new Date(currentTime))
+                .setExpiration(new Date(expirationTime))
+                .setSubject(user.getEmail())
+                .addClaims(claims)
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
 
         return Map.of("bearer", bearer);
     }
 
+    public boolean isValidToken(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public Map<String, String> extractUserInfoFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            String email = claims.get("email", String.class);
+            String name = claims.get("name", String.class);
+
+            return Map.of("email", email, "name", name);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     private Key getKey() {
-        return Keys.hmacShaKeyFor(encryptionKey.getBytes(StandardCharsets.UTF_8));
+
+        final byte[] decoder = Decoders.BASE64.decode(encryptionKey);
+
+        return Keys.hmacShaKeyFor(decoder);
     }
 }

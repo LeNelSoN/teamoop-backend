@@ -6,7 +6,7 @@ spring:
     password: teamoop
   liquibase:
     change-log: classpath:db/changelog/master.xml
-    enabled: true
+    enabled: false
     contexts: dev
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

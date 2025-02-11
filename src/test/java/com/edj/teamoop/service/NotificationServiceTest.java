@@ -2,6 +2,7 @@ package com.edj.teamoop.service;
 
 import com.edj.teamoop.model.Notification.MessageNotification;
 import com.edj.teamoop.model.Notification.Notification;
+import com.edj.teamoop.model.User;
 import com.edj.teamoop.repository.NotificationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,14 +26,17 @@ public class NotificationServiceTest {
 
     @Test
     void testGetNotificationsByUserId() {
-
         Long userId = 1L;
+
+        User user = new User();
+        user.setId(userId);
+
         Notification notification1 = new MessageNotification();
         notification1.setId(1L);
-        notification1.setUserId(userId);
+        notification1.setUser(user);
         Notification notification2 = new MessageNotification();
         notification2.setId(2L);
-        notification2.setUserId(userId);
+        notification1.setUser(user);
 
         when(notificationRepository.findByUserId(userId)).thenReturn(Arrays.asList(notification1, notification2));
 
@@ -46,10 +50,12 @@ public class NotificationServiceTest {
     }
         @Test
     void testAddNotification() {
+        User user = new User();
+        user.setId(1L);
 
         Notification notification = new MessageNotification();
         notification.setId(1L);
-        notification.setUserId(1L);
+        notification.setUser(user);
 
         when(notificationRepository.save(notification)).thenReturn(notification);
 

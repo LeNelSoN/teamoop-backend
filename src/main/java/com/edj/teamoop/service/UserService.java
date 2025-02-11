@@ -1,8 +1,11 @@
 package com.edj.teamoop.service;
 
+import java.util.List;
 import java.util.regex.Pattern;
 
-import jakarta.persistence.EntityNotFoundException;
+import com.edj.teamoop.exception.DataNotFoundException;
+import com.edj.teamoop.mapper.UserMapper;
+import com.edj.teamoop.model.Notification.Notification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,11 +24,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -61,15 +66,20 @@ public class UserService implements UserDetailsService {
 
     public UserDTO findByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found !"));
+                .orElseThrow(() -> new DataNotFoundException("User not found !"));
 
-        return new UserDTO(
-                user.getId(),
-                user.getEmail(),
-                user.getName(),
-                user.getPassword(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
-        );
+        UserDTO userDTO = userMapper.toDTO(user);
+
+        Long numberOfUnreadNotification = countNumberOfUnreadNotification(user.getNotifications());
+
+        userDTO.setNumberOfUnreadNotifications(numberOfUnreadNotification);
+
+        return userDTO;
+    }
+
+    private Long countNumberOfUnreadNotification(List<Notification> notificationList) {
+        return notificationList.stream()
+                .filter((notification -> !notification.isRead()))
+                .count();
     }
 }
