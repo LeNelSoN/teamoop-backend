@@ -3,9 +3,9 @@ package com.edj.teamoop.service;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.edj.teamoop.exception.DataNotFoundException;
 import com.edj.teamoop.mapper.UserMapper;
 import com.edj.teamoop.model.Notification.Notification;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
 
     public UserDTO findByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new EntityNotFoundException("User not found !"));
+                .orElseThrow(() -> new DataNotFoundException("User not found !"));
 
         UserDTO userDTO = userMapper.toDTO(user);
 

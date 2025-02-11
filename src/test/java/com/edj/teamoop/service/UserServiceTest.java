@@ -1,22 +1,32 @@
 package com.edj.teamoop.service;
 
 import com.edj.teamoop.dto.UserDTO;
+import com.edj.teamoop.exception.DataNotFoundException;
 import com.edj.teamoop.exception.EmailAlreadyExistsException;
 import com.edj.teamoop.exception.InvalidPasswordException;
+import com.edj.teamoop.mapper.UserMapper;
+import com.edj.teamoop.model.Notification.MessageNotification;
+import com.edj.teamoop.model.Notification.Notification;
 import com.edj.teamoop.model.User;
 import com.edj.teamoop.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 
     @InjectMocks
@@ -26,15 +36,13 @@ public class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
+    private UserMapper userMapper;
+
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Mock
     private JwtServiceTest jwtService;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     void testCreateUser_OK() {
@@ -61,7 +69,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCreateUser_EmailAlreadyExists_OK() {
+    void testCreateUser_EmailAlreadyExists() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("Test");
         userDTO.setEmail("test@gmail.com");
@@ -78,7 +86,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCreateUser_InvalidPassword_OK() {
+    void testCreateUser_InvalidPassword() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("Test");
         userDTO.setEmail("test@gmail.com");
@@ -94,7 +102,7 @@ public class UserServiceTest {
     }
 
     @Test
-    void testCreateUser_MissingFields_OK() {
+    void testCreateUser_MissingFields() {
         UserDTO userDTO = new UserDTO();
         userDTO.setName("Test");
         userDTO.setEmail(null); 
@@ -106,4 +114,52 @@ public class UserServiceTest {
 
         assertEquals("The name, email and password fields are required.", exception.getMessage());
     }
+
+    @Test
+    void testFindByEmail_OK() {
+
+        MessageNotification notification1 = new MessageNotification();
+        notification1.setMessage("message1");
+
+        MessageNotification notification2 = new MessageNotification();
+        notification2.setMessage("message2");
+
+        List<Notification> notificationList = List.of(notification1, notification2);
+
+        User user = new User();
+        user.setName("Test");
+        user.setEmail("test@gmail.com");
+        user.setPassword("Test123!45678");
+        user.setNotifications(notificationList);
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName("Test");
+        userDTO.setEmail("test@gmail.com");
+        userDTO.setPassword("Test123!45678");
+        userDTO.setNumberOfUnreadNotifications(2L);
+
+        when(userRepository.findByEmail("test@gmail.com")).thenReturn(Optional.of(user));
+        when(userMapper.toDTO(user)).thenReturn(userDTO);
+
+        UserDTO userDTO1 = userService.findByEmail("test@gmail.com");
+
+        assertEquals("Test", userDTO.getName());
+        assertEquals("test@gmail.com", userDTO.getEmail());
+        assertEquals("Test123!45678", userDTO.getPassword());
+        assertEquals(2L, userDTO1.getNumberOfUnreadNotifications());
+        verify(userRepository, times(1)).findByEmail("test@gmail.com");
+    }
+
+    @Test
+    void testFindByEmail_UserNotFound() {
+
+        when(userRepository.findByEmail("test@gmail.com")).thenThrow(new DataNotFoundException("User not found !"));
+
+        Exception exception = assertThrows(DataNotFoundException.class, () -> {
+            userService.findByEmail("test@gmail.com");
+        });
+        assertEquals("User not found !", exception.getMessage());
+    }
+
+
 }

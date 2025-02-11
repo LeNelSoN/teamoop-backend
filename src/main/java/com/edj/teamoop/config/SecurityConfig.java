@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers( "/api/user", "/api/user/login").permitAll()
+                        .requestMatchers( "/api/user", "/api/login").permitAll()
                         .anyRequest().authenticated());
 
         return http.build();
@@ -50,7 +50,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfig.corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/user", "/api/user/login","/actuator/**","/h2-console").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/user", "/api/login", "/actuator/**","/h2-console").permitAll()
                         .anyRequest().authenticated());
 
         return http.build();
