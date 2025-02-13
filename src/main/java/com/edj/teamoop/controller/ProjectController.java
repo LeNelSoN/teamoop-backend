@@ -20,9 +20,9 @@ public class ProjectController {
         Page<ProjectDTO> projectPage = projectCacheService.getCachedPage(page, size);
         if(projectPage.isEmpty()){
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(projectPage);
         }
+        return ResponseEntity.ok(projectPage);
+
     }
 
     @GetMapping(path = "/{id}")
