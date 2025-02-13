@@ -17,11 +17,15 @@ import java.util.Map;
 @Service
 public class JwtService {
 
-    @Autowired
-    private  UserService userService;
+    private final UserService userService;
 
-    @Value("${spring.encryption.key}")
-    private String encryptionKey;
+    private final String encryptionKey;
+
+    @Autowired
+    public JwtService(UserService userService, @Value("${spring.encryption.key}") String encryptionKey) {
+        this.userService = userService;
+        this.encryptionKey = encryptionKey;
+    }
 
     public Map<String, String> generate(String username) {
 
