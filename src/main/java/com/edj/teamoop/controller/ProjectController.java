@@ -4,6 +4,7 @@ import com.edj.teamoop.dto.ProjectDTO;
 import com.edj.teamoop.service.cache.ProjectCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,4 +30,23 @@ public class ProjectController {
         ProjectDTO projectDTO = projectCacheService.getCachedEntity(projectId);
         return ResponseEntity.ok(projectDTO);
     }
+
+    @PostMapping
+    public ResponseEntity<ProjectDTO> createProject(@RequestBody ProjectDTO projectDTO) {
+        ProjectDTO createdProject = projectCacheService.createProject(projectDTO);
+        return ResponseEntity.ok(createdProject);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<ProjectDTO> deleteProject(@PathVariable("id") Long projectId) {
+        ProjectDTO deletedProject = projectCacheService.deleteProject(projectId);
+        return ResponseEntity.ok(deletedProject);
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<ProjectDTO> updateProject(@PathVariable("id") Long projectId, @RequestBody ProjectDTO projectDTO) {
+        ProjectDTO updatedProject = projectCacheService.updateProject(projectId, projectDTO);
+        return ResponseEntity.ok(updatedProject);
+    }
+
 }

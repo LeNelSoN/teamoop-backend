@@ -2,7 +2,6 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/teamoopdb
-    initialization-mode: always
     username: ${SPRING_DATABASE_USERNAME}
     password: ${SPRING_DATABASE_PASSWORD}
   liquibase:
@@ -15,6 +14,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     hibernate:
+
       ddl-auto: update
   encryption:
     key: ${ENCRYPTION_KEY}
