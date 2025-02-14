@@ -48,6 +48,7 @@ public class UserControllerIT {
         verify(userService, times(1)).createUser(any(UserDTO.class));
     }
 
+    @Test
     void testAddUser_EmailAlreadyExists() throws Exception {
     
         String userJson = """
@@ -58,7 +59,7 @@ public class UserControllerIT {
             }
         """;
 
-        doThrow(new EmailAlreadyExistsException("L'email johndoe@gmail.com est déjà utilisé."))
+        doThrow(new EmailAlreadyExistsException("Email johndoe@gmail.com is already used !"))
                 .when(userService)
                 .createUser(any(UserDTO.class));
 
@@ -70,4 +71,6 @@ public class UserControllerIT {
 
         verify(userService, times(1)).createUser(any(UserDTO.class));
     }
+
+
 }
