@@ -20,7 +20,6 @@ public class JwtServiceTest {
     private UserService userService;
 
     @Mock
-    @Autowired
     private JwtService jwtService;
 
     private String encryptionKey = "5fd4d6432f2545ceb0078a3a992f31537c7c0fe65d31539d1bf403fb7bd0c596"; // Clé de test
