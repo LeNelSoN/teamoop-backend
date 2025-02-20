@@ -15,6 +15,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "message_notifications")
 public class MessageNotification extends Notification{
-    @Column(name = "message", nullable = false)
+    @Column(nullable = false)
     private String message;
 }
