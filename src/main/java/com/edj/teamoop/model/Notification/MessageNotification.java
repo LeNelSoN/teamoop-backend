@@ -17,6 +17,6 @@ import lombok.Setter;
 @Table(name = "message_notifications")
 @DiscriminatorValue("message")
 public class MessageNotification extends Notification{
-    @Column(name = "message", nullable = false)
+    @Column(nullable = false)
     private String message;
 }
