@@ -23,7 +23,7 @@ spring:
     key: 5fd4d6432f2545ceb0078a3a992f31537c7c0fe65d31539d1bf403fb7bd0c596
 
   redis:
-    host: localhost
+    host: redis
     port: 6379
     password: password
     ttl:
