@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATABASE_URL}
-    username: ${SPRING_DATABASE_USERNAME}
-    password: ${SPRING_DATABASE_PASSWORD}
+  #  url: ${SPRING_DATABASE_URL}
+  #  username: ${SPRING_DATABASE_USERNAME}
+  #  password: ${SPRING_DATABASE_PASSWORD}
     url: jdbc:postgresql://localhost:5432/teamoopdb
     initialization-mode: none
     username: teamoop
