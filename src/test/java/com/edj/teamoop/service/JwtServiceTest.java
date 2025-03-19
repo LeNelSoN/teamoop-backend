@@ -1,5 +1,6 @@
 package com.edj.teamoop.service;
 
+import com.edj.teamoop.dto.UserDTO;
 import com.edj.teamoop.model.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,13 +38,14 @@ public class JwtServiceTest {
         mockUser.setName("Test");
         mockUser.setEmail(username);
 
-        when(userService.loadUserByUsername(username)).thenReturn(mockUser);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setName(mockUser.getName());
+        userDTO.setEmail(mockUser.getEmail());
 
-        Map<String, String> result = jwtService.generate(username);
+        String result = jwtService.generateToken(userDTO);
 
         assertNotNull(result);
-        assertTrue(result.containsKey("bearer"));
-        assertNotNull(result.get("bearer"));
-        assertFalse(result.get("bearer").isEmpty());
+        assertFalse(result.isEmpty());
+        assertTrue(result.contains("."));
     }
 }

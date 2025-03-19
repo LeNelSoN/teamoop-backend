@@ -1,21 +1,16 @@
 package com.edj.teamoop.service;
 
 import com.edj.teamoop.dto.UserDTO;
-import com.edj.teamoop.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
-import com.edj.teamoop.model.User;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.nio.charset.StandardCharsets;
 import java.security.Key;
-import java.util.Date;
 import java.util.Map;
 
 @Service
@@ -30,12 +25,13 @@ public class JwtService {
         this.encryptionKey = encryptionKey;
     }
 
-    public Map<String, String> generate(String username) {
+   /* public Map<String, String> generate(String username) {
 
         User user = (User) this.userService.loadUserByUsername(username);
 
         return this.generateJwt(user);
     }
+
 
     private Map<String, String> generateJwt(User user) {
 
@@ -57,6 +53,7 @@ public class JwtService {
 
         return Map.of("bearer", bearer);
     }
+*/
 
     public boolean isValidToken(String token) {
         try {
@@ -92,5 +89,12 @@ public class JwtService {
         final byte[] decoder = Decoders.BASE64.decode(encryptionKey);
 
         return Keys.hmacShaKeyFor(decoder);
+    }
+
+    public String generateToken(UserDTO user) {
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .signWith(getKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 }

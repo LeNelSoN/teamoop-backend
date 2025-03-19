@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserMapper userMapper;
+    public final UserMapper userMapper;
 
     @Autowired
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
@@ -40,28 +40,19 @@ public class UserService implements UserDetailsService {
 
     private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{12,255}$";
 
-    public void createUser(UserDTO userDTO) {
-        
-        if (userDTO.getName() == null || userDTO.getEmail() == null || userDTO.getPassword() == null) {
-            throw new IllegalArgumentException("The name, email and password fields are required.");
-        }
-
+    public User createUser(UserDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new EmailAlreadyExistsException("Email " + userDTO.getEmail() + " already used !");
+            throw new EmailAlreadyExistsException("Email already exists !");
         }
 
-        if (!Pattern.matches(PASSWORD_REGEX, userDTO.getPassword())) {
-            throw new InvalidPasswordException("The password must contain at least 12 characters, an uppercase letter, a lowercase letter, a number and a special character.");
+        if (!Pattern.compile(PASSWORD_REGEX).matcher(userDTO.getPassword()).matches()) {
+            throw new InvalidPasswordException("Password must contain at least 12 characters, one uppercase, one lowercase, one number and one special character !");
         }
 
-        User user = new User();
-        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+        User user = userMapper.toEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(hashedPassword);
-
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public UserDTO findByEmail(String email) {
@@ -81,5 +72,9 @@ public class UserService implements UserDetailsService {
         return notificationList.stream()
                 .filter((notification -> !notification.isRead()))
                 .count();
+    }
+
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

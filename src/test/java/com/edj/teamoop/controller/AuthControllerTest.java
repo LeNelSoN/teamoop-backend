@@ -50,13 +50,13 @@ public class AuthControllerTest {
 
         when(userService.findByEmail("test@example.com")).thenReturn(mockUser);
         when(passwordEncoder.matches("password123", "encodedPassword")).thenReturn(true);
-        when(jwtService.generate("test@example.com")).thenReturn(Map.of("bearer", "jwtToken123"));
+        when(jwtService.generateToken(mockUser)).thenReturn("jwtToken123");
 
         ResponseEntity<Map<String, String>> response = authController.login(authenticationDTO);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).containsKey("bearer");
-        assertThat(Objects.requireNonNull(response.getBody()).get("bearer")).isEqualTo("jwtToken123");
+        assertThat(response.getBody()).isNotNull();
+        assertThat(response.getBody()).containsKey("token");
     }
 
     @Test

@@ -9,11 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
@@ -31,15 +29,28 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @PostMapping(path = "/register")
+    public ResponseEntity<UserDTO> register(@RequestBody UserDTO userDTO) {
+        User user = new User();
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setRole(userDTO.getRole());
+        userService.save(user);
+        return new ResponseEntity<>(userDTO, HttpStatus.CREATED);
+    }
+
     @PostMapping(path = "/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody AuthenticationDTO authenticationDTO) {
-
-        UserDTO user = userService.findByEmail(authenticationDTO.email());
-        if (user == null || !passwordEncoder.matches(authenticationDTO.password(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid credentials"));
+        UserDTO user = userService.findByEmail(authenticationDTO.getEmail());
+        if (user == null || !passwordEncoder.matches(authenticationDTO.getPassword(), user.getPassword())) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Invalid credentials");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
-
-        Map<String, String> token = jwtService.generate(authenticationDTO.email());
-        return ResponseEntity.ok(token);
+        String token = jwtService.generateToken(user);
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

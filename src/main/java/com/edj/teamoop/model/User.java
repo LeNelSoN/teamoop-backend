@@ -29,23 +29,36 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true, length = 255)
     private String email;
 
+
     @Column(nullable = false, length = 255)
     private String password;
 
     @Column(nullable = false)
     private LocalDate createdAt;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private LocalDate updatedAt;
 
     @OneToMany(mappedBy = "user")
     private List<Notification> notifications;
-    
+
+    @Column(nullable = false)
+    private String role;
+
     @PrePersist
     protected void onCreate() {
+        LocalDate now = LocalDate.now();
         if (this.createdAt == null) {
-            this.createdAt = LocalDate.now();
+            this.createdAt = now;
         }
+        if (this.updatedAt == null) {
+            this.updatedAt = now;
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDate.now();
     }
 
     @Override
@@ -63,3 +76,5 @@ public class User implements UserDetails {
         return this.email;
     }
 }
+
+
