@@ -22,8 +22,9 @@ public abstract class Notification {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "is_read", nullable = false)
     private boolean isRead;
 
-    @Column(nullable = false)
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 }
