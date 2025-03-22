@@ -17,7 +17,7 @@ public class NotificationCacheService {
     }
 
     @Cacheable(value = "notifications", key = "'page:' + #page + '-size:' + #size")
-    public Page<NotificationDTO> getCachedPage(String userName, int page, int size) {
-        return notificationService.getNotificationsByUserName(userName, page, size);
+    public Page<NotificationDTO> getCachedPage(Long userId, int page, int size) {
+        return notificationService.getNotificationsByUserName(userId, page, size);
     }
 }

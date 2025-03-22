@@ -39,7 +39,6 @@ public class NotificationServiceTest {
 
         User user = new User();
         user.setId(userId);
-        user.setName("jean neige");
 
         Notification notification1 = new MessageNotification();
         notification1.setId(1L);
@@ -51,7 +50,7 @@ public class NotificationServiceTest {
         PageRequest pageable = PageRequest.of(0, 10);
         Page<Notification> notificationsPage = new PageImpl<>(Arrays.asList(notification1, notification2), pageable, 2);
 
-        when(notificationRepository.findByUser_UserName("jean neige", pageable)).thenReturn(notificationsPage);
+        when(notificationRepository.findByUserId(1L, pageable)).thenReturn(notificationsPage);
 
         NotificationDTO notificationDTO1 = new MessageNotificationDTO(1L, user, true, LocalDate.now(), "Test message 1");
         NotificationDTO notificationDTO2 = new MessageNotificationDTO(2L, user, false, LocalDate.now(), "Test message 2");
@@ -59,13 +58,13 @@ public class NotificationServiceTest {
         when(notificationMapperUtil.mapNotificationToDTO(notification1)).thenReturn(notificationDTO1);
         when(notificationMapperUtil.mapNotificationToDTO(notification2)).thenReturn(notificationDTO2);
 
-        Page<NotificationDTO> notificationDTOPage = notificationService.getNotificationsByUserName("jean neige", 0, 10);
+        Page<NotificationDTO> notificationDTOPage = notificationService.getNotificationsByUserName(1L, 0, 10);
 
         assertThat(notificationDTOPage).hasSize(2);
         assertThat(notificationDTOPage.getContent().get(0).getId()).isEqualTo(1L);
         assertThat(notificationDTOPage.getContent().get(1).getId()).isEqualTo(2L);
 
-        verify(notificationRepository, times(1)).findByUser_UserName("jean neige", pageable);
+        verify(notificationRepository, times(1)).findByUserId(1L, pageable);
     }
         @Test
     void testAddNotification() {

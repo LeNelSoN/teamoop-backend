@@ -25,14 +25,14 @@ public class NotificationService {
         this.notificationMapperUtil = notificationMapperUtil;
     }
 
-    public Page<NotificationDTO> getNotificationsByUserName(String userName, int page, int size) {
+    public Page<NotificationDTO> getNotificationsByUserName(Long userId, int page, int size) {
         if (page < 0 || size <= 0) {
             throw new IllegalArgumentException("Invalid pagination parameters: Page index must be >= 0 and size must be > 0");
         }
         int maxSize = 50;
         PageRequest pageable = PageRequest.of(page, Math.min(size, maxSize));
 
-        Page<Notification> notificationsPage = notificationRepository.findByUser_UserName(userName, pageable);
+        Page<Notification> notificationsPage = notificationRepository.findByUserId(userId, pageable);
 
         List<NotificationDTO> notificationDTOList = notificationsPage.getContent().stream()
                 .map(notificationMapperUtil::mapNotificationToDTO)
