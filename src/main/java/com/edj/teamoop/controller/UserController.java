@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.edj.teamoop.dto.UserDTO;
 import com.edj.teamoop.service.UserService;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +45,6 @@ public class UserController {
 
     @GetMapping(path = "/me")
     public ResponseEntity<UserDTO> getUserInfo() {
-        return ResponseEntity.ok(userService.findByEmail(SecurityContextUtil.getUserPrincipal()));
+        return ResponseEntity.ok(userService.findByEmail(SecurityContextUtil.getUserPrincipalName()));
     }
 }
