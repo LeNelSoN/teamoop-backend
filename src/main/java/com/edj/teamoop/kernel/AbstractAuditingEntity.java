@@ -21,10 +21,9 @@ public abstract class AbstractAuditingEntity<T> implements Serializable {
     public abstract T getId();
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
-    private Instant created;
+    @Column(updatable = false)
+    private Instant created = Instant.now();
 
     @LastModifiedDate
-    @Column(nullable = false)
-    private Instant lastModified;
+    private Instant lastModified = Instant.now();
 }
