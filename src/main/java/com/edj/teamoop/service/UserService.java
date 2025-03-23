@@ -3,6 +3,7 @@ package com.edj.teamoop.service;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.edj.teamoop.dto.user.CreateUserDTO;
 import com.edj.teamoop.exception.DataNotFoundException;
 import com.edj.teamoop.mapper.UserMapper;
 import com.edj.teamoop.model.Notification.Notification;
@@ -14,7 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.edj.teamoop.dto.UserDTO;
+import com.edj.teamoop.dto.user.UserDTO;
 import com.edj.teamoop.exception.EmailAlreadyExistsException;
 import com.edj.teamoop.exception.InvalidPasswordException;
 import com.edj.teamoop.model.User;
@@ -24,8 +25,13 @@ import com.edj.teamoop.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
 
+    @Autowired
     private final UserRepository userRepository;
+
+    @Autowired
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
     private final UserMapper userMapper;
 
     @Override
@@ -35,25 +41,25 @@ public class UserService implements UserDetailsService {
 
     private static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{12,255}$";
 
-    public void createUser(UserDTO userDTO) {
-        
-        if (userDTO.getName() == null || userDTO.getEmail() == null || userDTO.getPassword() == null) {
+    public void createUser(CreateUserDTO createUserDTO) {
+
+        if (createUserDTO.name() == null || createUserDTO.email() == null || createUserDTO.password() == null) {
             throw new IllegalArgumentException("The name, email and password fields are required.");
         }
 
-        if (userRepository.existsByEmail(userDTO.getEmail())) {
-            throw new EmailAlreadyExistsException("Email " + userDTO.getEmail() + " already used !");
+        if (userRepository.existsByEmail(createUserDTO.email())) {
+            throw new EmailAlreadyExistsException("Email " + createUserDTO.email() + " already used !");
         }
 
-        if (!Pattern.matches(PASSWORD_REGEX, userDTO.getPassword())) {
+        if (!Pattern.matches(PASSWORD_REGEX, createUserDTO.password())) {
             throw new InvalidPasswordException("The password must contain at least 12 characters, an uppercase letter, a lowercase letter, a number and a special character.");
         }
 
         User user = new User();
-        String hashedPassword = passwordEncoder.encode(userDTO.getPassword());
+        String hashedPassword = passwordEncoder.encode(createUserDTO.password());
 
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
+        user.setName(createUserDTO.name());
+        user.setEmail(createUserDTO.email());
         user.setPassword(hashedPassword);
 
         userRepository.save(user);

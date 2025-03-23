@@ -1,16 +1,18 @@
 package com.edj.teamoop.controller;
 
+import com.edj.teamoop.dto.user.CreateUserDTO;
 import com.edj.teamoop.mapper.UserMapper;
 import com.edj.teamoop.service.JwtService;
 import com.edj.teamoop.service.NotificationService;
 import com.edj.teamoop.utility.SecurityContextUtil;
+import jakarta.validation.Valid;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.edj.teamoop.dto.UserDTO;
+import com.edj.teamoop.dto.user.UserDTO;
 import com.edj.teamoop.service.UserService;
 
 
@@ -37,9 +39,9 @@ public class UserController {
     @Autowired
     private UserMapper userMapper;
 
-    @PostMapping
-    public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
-        this.userService.createUser(userDTO);
+    @PostMapping("/create")
+    public ResponseEntity<String> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
+        this.userService.createUser(createUserDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body("User created !");
     }
 
