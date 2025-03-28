@@ -43,10 +43,11 @@ public class UserServiceTest {
     @Mock
     private JwtServiceTest jwtService;
 
-    CreateUserDTO userDTO = new CreateUserDTO("Test","test@gmail.com","Test123!45678");
 
     @Test
     void testCreateUser_OK() {
+        CreateUserDTO userDTO = new CreateUserDTO("Test","test@gmail.com","Test123!45678");
+
         when(userRepository.existsByEmail(userDTO.email())).thenReturn(false);
         when(passwordEncoder.encode(userDTO.password())).thenReturn("HashedPassword123!");
         when(userRepository.save(any(User.class))).thenReturn(new User());
@@ -66,6 +67,8 @@ public class UserServiceTest {
 
     @Test
     void testCreateUser_EmailAlreadyExists() {
+        CreateUserDTO userDTO = new CreateUserDTO("Test","test@gmail.com","Test123!45678");
+
         when(userRepository.existsByEmail(userDTO.email())).thenReturn(true);
 
         Exception exception = assertThrows(EmailAlreadyExistsException.class, () -> {
