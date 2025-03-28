@@ -7,7 +7,6 @@ import com.edj.teamoop.dto.user.CreateUserDTO;
 import com.edj.teamoop.exception.DataNotFoundException;
 import com.edj.teamoop.mapper.UserMapper;
 import com.edj.teamoop.model.Notification.Notification;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,17 +21,19 @@ import com.edj.teamoop.model.User;
 import com.edj.teamoop.repository.UserRepository;
 
 @Service
-@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-
-    @Autowired
     private final UserRepository userRepository;
 
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     private final UserMapper userMapper;
+
+    @Autowired
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
