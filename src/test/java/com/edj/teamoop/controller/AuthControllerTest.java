@@ -1,10 +1,8 @@
 package com.edj.teamoop.controller;
 
 import com.edj.teamoop.dto.AuthenticationDTO;
-import com.edj.teamoop.dto.UserDTO;
-import com.edj.teamoop.model.User;
+import com.edj.teamoop.dto.user.UserDTO;
 import com.edj.teamoop.service.JwtService;
-import com.edj.teamoop.service.JwtServiceTest;
 import com.edj.teamoop.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

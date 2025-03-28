@@ -7,7 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.edj.teamoop.dto.user.CreateUserDTO;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -15,7 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.edj.teamoop.dto.UserDTO;
 import com.edj.teamoop.exception.EmailAlreadyExistsException;
 import com.edj.teamoop.service.UserService;
 
@@ -45,7 +46,7 @@ public class UserControllerIT {
                         .content(userJson))
                 .andExpect(status().isCreated());
 
-        verify(userService, times(1)).createUser(any(UserDTO.class));
+        verify(userService, times(1)).createUser(any(CreateUserDTO.class));
     }
 
     @Test
@@ -61,7 +62,7 @@ public class UserControllerIT {
 
         doThrow(new EmailAlreadyExistsException("Email johndoe@gmail.com is already used !"))
                 .when(userService)
-                .createUser(any(UserDTO.class));
+                .createUser(any(CreateUserDTO.class));
 
 
         mockMvc.perform(post("/api/users")
@@ -69,7 +70,7 @@ public class UserControllerIT {
                         .content(userJson))
                 .andExpect(status().isConflict());
 
-        verify(userService, times(1)).createUser(any(UserDTO.class));
+        verify(userService, times(1)).createUser(any(CreateUserDTO.class));
     }
 
 

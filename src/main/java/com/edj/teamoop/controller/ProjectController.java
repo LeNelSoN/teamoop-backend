@@ -4,7 +4,6 @@ import com.edj.teamoop.dto.ProjectDTO;
 import com.edj.teamoop.service.cache.ProjectCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +19,9 @@ public class ProjectController {
         Page<ProjectDTO> projectPage = projectCacheService.getCachedPage(page, size);
         if(projectPage.isEmpty()){
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(projectPage);
         }
+        return ResponseEntity.ok(projectPage);
+
     }
 
     @GetMapping(path = "/{id}")

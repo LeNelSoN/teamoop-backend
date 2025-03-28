@@ -1,6 +1,7 @@
 package com.edj.teamoop.service;
 
-import com.edj.teamoop.dto.UserDTO;
+import com.edj.teamoop.dto.user.CreateUserDTO;
+import com.edj.teamoop.dto.user.UserDTO;
 import com.edj.teamoop.exception.DataNotFoundException;
 import com.edj.teamoop.exception.EmailAlreadyExistsException;
 import com.edj.teamoop.exception.InvalidPasswordException;
@@ -9,13 +10,11 @@ import com.edj.teamoop.model.Notification.MessageNotification;
 import com.edj.teamoop.model.Notification.Notification;
 import com.edj.teamoop.model.User;
 import com.edj.teamoop.repository.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -44,15 +43,13 @@ public class UserServiceTest {
     @Mock
     private JwtServiceTest jwtService;
 
+
     @Test
     void testCreateUser_OK() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName("Test");
-        userDTO.setEmail("test@gmail.com");
-        userDTO.setPassword("Test123!45678");
+        CreateUserDTO userDTO = new CreateUserDTO("Test","test@gmail.com","Test123!45678");
 
-        when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(userDTO.getPassword())).thenReturn("HashedPassword123!");
+        when(userRepository.existsByEmail(userDTO.email())).thenReturn(false);
+        when(passwordEncoder.encode(userDTO.password())).thenReturn("HashedPassword123!");
         when(userRepository.save(any(User.class))).thenReturn(new User());
 
         userService.createUser(userDTO);
@@ -65,17 +62,14 @@ public class UserServiceTest {
         assertEquals("test@gmail.com", capturedUser.getEmail());
         assertEquals("HashedPassword123!", capturedUser.getPassword());
 
-        verify(passwordEncoder, times(1)).encode(userDTO.getPassword());
+        verify(passwordEncoder, times(1)).encode(userDTO.password());
     }
 
     @Test
     void testCreateUser_EmailAlreadyExists() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName("Test");
-        userDTO.setEmail("test@gmail.com");
-        userDTO.setPassword("Test123!45678");
+        CreateUserDTO userDTO = new CreateUserDTO("Test","test@gmail.com","Test123!45678");
 
-        when(userRepository.existsByEmail(userDTO.getEmail())).thenReturn(true);
+        when(userRepository.existsByEmail(userDTO.email())).thenReturn(true);
 
         Exception exception = assertThrows(EmailAlreadyExistsException.class, () -> {
             userService.createUser(userDTO);
@@ -87,13 +81,10 @@ public class UserServiceTest {
 
     @Test
     void testCreateUser_InvalidPassword() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName("Test");
-        userDTO.setEmail("test@gmail.com");
-        userDTO.setPassword("test123");
+        CreateUserDTO invalidUserDTO = new CreateUserDTO("Test","test@gmail.com","test123");
 
         Exception exception = assertThrows(InvalidPasswordException.class, () -> {
-            userService.createUser(userDTO);
+            userService.createUser(invalidUserDTO);
         });
 
         assertEquals("The password must contain at least 12 characters, an uppercase letter, a lowercase letter, a number and a special character.", exception.getMessage());
@@ -103,13 +94,10 @@ public class UserServiceTest {
 
     @Test
     void testCreateUser_MissingFields() {
-        UserDTO userDTO = new UserDTO();
-        userDTO.setName("Test");
-        userDTO.setEmail(null); 
-        userDTO.setPassword("Test123!45678");
+        CreateUserDTO missingFieldUserDTO = new CreateUserDTO("Test",null,"Test123!45678");
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            userService.createUser(userDTO);
+            userService.createUser(missingFieldUserDTO);
         });
 
         assertEquals("The name, email and password fields are required.", exception.getMessage());

@@ -22,8 +22,8 @@
             <column name="user" type="bigint">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_at" type="timestamp"/>
-            <column name="updated_at" type="timestamp"/>
+            <column name="created" type="timestamp"/>
+            <column name="last_modified" type="timestamp"/>
         </createTable>
         <addForeignKeyConstraint baseColumnNames="project"
                                  baseTableName="comment"
