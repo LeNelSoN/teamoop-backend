@@ -1,6 +1,5 @@
 package com.edj.teamoop.utility;
 
-import com.edj.teamoop.model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
