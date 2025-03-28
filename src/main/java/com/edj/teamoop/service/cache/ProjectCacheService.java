@@ -34,7 +34,6 @@ public class ProjectCacheService {
         return project;
     }
 
-
     public ProjectDTO updateProject(Long projectId, ProjectDTO projectDTO) {
         projectDTO.setId(projectId);
         return projectService.updateProject(projectDTO);

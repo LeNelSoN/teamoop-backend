@@ -41,7 +41,8 @@ public class JwtService {
 
         Map<String, Object> claims = Map.of(
                 "email", user.getEmail(),
-                "name", user.getName()
+                "name", user.getName(),
+                "id", user.getId()
         );
 
         final long currentTime = System.currentTimeMillis();
@@ -92,5 +93,19 @@ public class JwtService {
         final byte[] decoder = Decoders.BASE64.decode(encryptionKey);
 
         return Keys.hmacShaKeyFor(decoder);
+    }
+
+    public Long extractUserIdFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(getKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.get("id", Long.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

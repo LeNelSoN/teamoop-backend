@@ -34,6 +34,7 @@ public class JwtServiceTest {
 
         String username = "test@example.com";
         User mockUser = new User();
+        mockUser.setId(1L);
         mockUser.setName("Test");
         mockUser.setEmail(username);
 
