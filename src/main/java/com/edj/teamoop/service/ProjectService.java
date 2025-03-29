@@ -5,6 +5,7 @@ import com.edj.teamoop.dto.ProjectDTO;
 import com.edj.teamoop.mapper.ProjectMapper;
 import com.edj.teamoop.model.Project;
 import com.edj.teamoop.repository.ProjectRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,32 +39,29 @@ public class ProjectService {
                 .orElseThrow(()-> new ProjectNotFoundException(String.format("The project with ID %s does not exist.", id)));
     }
 
+    @Transactional
     public void deleteProjectById(Long id) {
-        if(projectRepository.existsById(id)) {
-            projectRepository.deleteById(id);
-        } else {
+        if (!projectRepository.existsById(id)) {
             throw new ProjectNotFoundException(String.format("The project with ID %s does not exist.", id));
         }
-    }
-
-    public Project getProjectByName(String name) {
-        Optional<Project> project = projectRepository.findByName(name);
-        return project.orElseThrow(()-> new ProjectNotFoundException(String.format("The project with ID %s does not exist.", name)));
-    }
-
-    public List<Project> getActiveProjects() {
-        return projectRepository.findByActiveTrue();
+        projectRepository.deleteById(id);
     }
 
     public ProjectDTO createProject(ProjectDTO projectDTO) {
+        if (projectRepository.existsByName(projectDTO.getName())) {
+            throw new IllegalArgumentException(String.format(
+                    "A project with the name '%s' already exists.", projectDTO.getName()));
+        }
         Project project = projectMapper.toEntity(projectDTO);
-        project = projectRepository.save(project);
-        return projectMapper.toDTO(project);
+        return projectMapper.toDTO(projectRepository.save(project));
     }
 
+    @Transactional
     public ProjectDTO updateProject(ProjectDTO projectDTO) {
+        if (!projectRepository.existsById(projectDTO.getId())) {
+            throw new ProjectNotFoundException(String.format("The project with ID %s does not exist.", projectDTO.getId()));
+        }
         Project project = projectMapper.toEntity(projectDTO);
-        project = projectRepository.save(project);
-        return projectMapper.toDTO(project);
+        return projectMapper.toDTO(projectRepository.save(project));
     }
 }

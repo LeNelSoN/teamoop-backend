@@ -127,4 +127,62 @@ public class ProjectServiceTest {
         verify(projectRepository, times(1)).findById(2L);
         verify(projectMapper, never()).toDTO(any());
     }
+
+    @Test
+    void testCreateProject_OK() {
+        ProjectDTO projectDTO = new ProjectDTO(null, "New Project", "A new project", LocalDate.of(2023, 7, 1), null, true);
+        Project project = new Project(1L, "New Project", "A new project", LocalDate.of(2023, 7, 1), null, true);
+
+        when(projectMapper.toEntity(projectDTO)).thenReturn(project);
+        when(projectRepository.save(project)).thenReturn(project);
+        when(projectMapper.toDTO(project)).thenReturn(projectDTO);
+
+        ProjectDTO createdProject = projectService.createProject(projectDTO);
+
+        assertNotNull(createdProject);
+        assertEquals("New Project", createdProject.getName());
+        verify(projectRepository, times(1)).save(project);
+        verify(projectMapper, times(1)).toDTO(project);
+    }
+
+    @Test
+    void testUpdateProject_OK() {
+        ProjectDTO projectDTO = new ProjectDTO(1L, "Updated Project", "Updated description", LocalDate.of(2023, 7, 1), null, true);
+        Project project = new Project(1L, "Updated Project", "Updated description", LocalDate.of(2023, 7, 1), null, true);
+
+        when(projectRepository.existsById(1L)).thenReturn(true);
+        when(projectMapper.toEntity(projectDTO)).thenReturn(project);
+        when(projectRepository.save(project)).thenReturn(project);
+        when(projectMapper.toDTO(project)).thenReturn(projectDTO);
+
+        ProjectDTO updatedProject = projectService.updateProject(projectDTO);
+
+        assertNotNull(updatedProject);
+        assertEquals("Updated Project", updatedProject.getName());
+        verify(projectRepository, times(1)).save(project);
+    }
+
+    @Test
+    void testDeleteProject_OK() {
+        when(projectRepository.existsById(1L)).thenReturn(true);
+
+        projectService.deleteProjectById(1L);
+
+        verify(projectRepository, times(1)).existsById(1L);
+        verify(projectRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeleteProject_NotFound() {
+        when(projectRepository.existsById(1L)).thenReturn(false);
+
+        ProjectNotFoundException exception = assertThrows(ProjectNotFoundException.class, () -> {
+            projectService.deleteProjectById(1L);
+        });
+
+        assertEquals("The project with ID 1 does not exist.", exception.getMessage());
+        verify(projectRepository, times(1)).existsById(1L);
+        verify(projectRepository, never()).deleteById(anyLong());
+    }
+
 }

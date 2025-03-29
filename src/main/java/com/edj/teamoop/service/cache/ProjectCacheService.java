@@ -3,11 +3,11 @@ package com.edj.teamoop.service.cache;
 import com.edj.teamoop.dto.ProjectDTO;
 import com.edj.teamoop.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class ProjectCacheService {
@@ -24,18 +24,18 @@ public class ProjectCacheService {
         return projectService.getProjectById(id);
     }
 
+    @CachePut(value = "projects", key = "'projectId:' + #result.id")
     public ProjectDTO createProject(ProjectDTO project) {
         return projectService.createProject(project);
     }
 
-    public ProjectDTO deleteProject(Long projectId) {
-        ProjectDTO project = projectService.getProjectById(projectId);
+    @CacheEvict(value = "projects", key = "'projectId:' + #projectId")
+    public void deleteProject(Long projectId) {
         projectService.deleteProjectById(projectId);
-        return project;
     }
 
-    public ProjectDTO updateProject(Long projectId, ProjectDTO projectDTO) {
-        projectDTO.setId(projectId);
+    @CachePut(value = "projects", key = "'projectId:' + #projectDTO.id")
+    public ProjectDTO updateProject(ProjectDTO projectDTO) {
         return projectService.updateProject(projectDTO);
     }
 }
