@@ -39,13 +39,14 @@ public class ProjectController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<ProjectDTO> deleteProject(@PathVariable("id") Long projectId) {
-        ProjectDTO deletedProject = projectCacheService.deleteProject(projectId);
-        return ResponseEntity.ok(deletedProject);
+        projectCacheService.deleteProject(projectId);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<ProjectDTO> updateProject(@PathVariable("id") Long projectId, @RequestBody ProjectDTO projectDTO) {
-        ProjectDTO updatedProject = projectCacheService.updateProject(projectId, projectDTO);
+        projectDTO.setId(projectId);
+        ProjectDTO updatedProject = projectCacheService.updateProject(projectDTO);
         return ResponseEntity.ok(updatedProject);
     }
 
