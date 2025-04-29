@@ -47,17 +47,6 @@ jobs:
           name: jacoco-html-report
           path: target/site/jacoco
 
-      - name: Post Comment with Report Link
-        uses: marocchino/sticky-pull-request-comment@v2
-        with:
-          header: Code Coverage
-          message: |
-            ### Code Coverage Report
-            - A full JaCoCo report is available in the artifacts of this workflow.
-            - You can download it [here](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}).
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-
   docker-build-and-push:
     needs: build-and-test
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
